@@ -3,7 +3,7 @@ include_once realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR).DIRECTORY_SEPARAT
 include_once LIB_DIR."User.php";
 include_once LIB_DIR."Course.php";
 include_once LIB_DIR."eMail.php";
-//include_once LIB_DIR."SMS.php";
+include_once LIB_DIR."SMS.php";
 
 class block_notifications extends block_base {
 
@@ -163,12 +163,7 @@ class block_notifications extends block_base {
 		$this->content   = new stdClass;
 		$Course = new Course();
 		$course_registration = $Course->get_registration($COURSE->id);
-		//print_r($Course->get_recent_activities($COURSE->id));
-		//$User = new User();
-		//print_r($User);
-		//print_r( $User->get_preferences($USER->id, $COURSE->id) );
-		//$this->content->text += $User->get_preferences($USER->id, $COURSE->id);
-		//print_r($User->get_all_users_enrolled_in_the_course($COURSE->id));
+		
 		if (
 			( $CFG->block_notifications_email_channel != 1 and $CFG->block_notifications_sms_channel != 1 and $CFG->block_notifications_rss_channel != 1) or
 			( $course_registration->notify_by_email == 0 and $course_registration->notify_by_sms == 0 and $course_registration->notify_by_rss == 0 )
@@ -239,7 +234,7 @@ function cron() {
 
 		// get the list of courses that are using this block
 		$courses = $Course->get_all_courses_using_notifications_block();
-
+		
 		// if no courses are using this block exit
 		if( !is_array($courses) or count($courses) < 1 ) {
 			echo "\n--> None course is using notifications plugin.";
@@ -253,12 +248,12 @@ function cron() {
 
 			// if the course has not been registered so far then register
 			echo "\n--> Processing course: $course->fullname";
-			if( !$Course->is_registered($course->id) ) $Course->register($course->id, time());
+			if( !$Course->is_registered($course->id) ) {
+				$Course->register($course->id, time());
+			}
 
 			// check notification frequency for this course
 			$course_registration = $Course->get_registration($course->id);
-
-
 			// initialize user preferences and check for new enrolled users in this course
 			$enrolled_users = $User->get_all_users_enrolled_in_the_course($course->id);
 

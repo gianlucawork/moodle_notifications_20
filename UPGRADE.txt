@@ -1,4 +1,4 @@
-To upgrade from 1.0.x version to 1.1.0 version please reinstall the plugin 
+To upgrade from 1.0.x version to 1.2 version please reinstall the block 
 by first deleting the old one and then installing the new one.
 
 Here is the procedure:
@@ -7,7 +7,7 @@ Here is the procedure:
 NOTE: 
 ***************************************************************************
 This procedure removes every previous instances of the block in all courses 
-where it has been added.
+where it has been added. Please perform these steps when upgrading.
 ***************************************************************************
 
 
@@ -17,11 +17,18 @@ where it has been added.
 
 - Delete Notifications block.
 
-- Delete the folder MOODLE_INSTALLATION_DIRECTORY/blocks/notify_changes
+- Delete the folder MOODLE_INSTALLATION_DIRECTORY/blocks/moodle_notifications
 
-- Copy the folder moodle_notifications to MOODLE_INSTALLATION_DIRECTORY/blocks/
+- Copy the folder notifications to MOODLE_INSTALLATION_DIRECTORY/blocks/
+	NOTE: The folder name has changed in the 1.2 version. The moodle_notification name
+	was used as database tables naming convention but it was too long in the moodle 2.3 
+	installations. To keep things clean and consistent the every "block_moodle_notifications" 
+	occurence has been replaced with "block_notifications". 
+	That's why the new folder is now named notifications. 
+	This should not change anymore in future and I apologize for any trouble it may
+	cause you.
 
 - Go back to the front page and click on Notifications in the Site Administration Block.
 
-- At this point the tables are going to be recreated and the new plugin is going to be installed. 
+- At this point the tables are going to be recreated and the new block is going to be installed. 
 

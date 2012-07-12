@@ -1,11 +1,11 @@
 function show_user_preferences_panel() {
-	$('#moodle_notifications_user_preferences_trigger').hide();
-	$('#moodle_notifications_user_preferences').show();
+	$('#notifications_user_preferences_trigger').hide();
+	$('#notifications_user_preferences').show();
 }
 
 function hide_user_preferences_panel() {
-	$('#moodle_notifications_user_preferences_trigger').show();
-	$('#moodle_notifications_user_preferences').hide();
+	$('#notifications_user_preferences_trigger').show();
+	$('#notifications_user_preferences').hide();
 }
 
 function save_user_preferences() {

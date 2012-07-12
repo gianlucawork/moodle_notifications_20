@@ -81,7 +81,6 @@ class Course {
 		if( !is_null($course_registration) ) {
 			return true;
 		} else {
-            die ('L= '.__LINE__);
 			return false;
 		}
 	}
@@ -89,7 +88,6 @@ class Course {
 	function get_registration_id( $course_id ){
 		$course_registration = $this->get_registration($course_id);
 		if( is_null($course_registration) ) {
-            die ('L= '.__LINE__);
 			return null;
 		} else {
 			return $course_registration->id;
@@ -103,7 +101,6 @@ class Course {
 		if( isset($course_registration) and is_array($course_registration) and !empty($course_registration)  ) {
 			return current($course_registration);
 		} else {
-            die ('L= '.__LINE__);
 			return null;
 		}
 	}
@@ -124,7 +121,6 @@ class Course {
 
 		$id = $DB->get_records_sql( "select instanceid from {$CFG->prefix}context where id in (select parentcontextid from {$CFG->prefix}block_instances where blockname = 'notifications') and instanceid = $course_id" );
 		if( empty($id) ) {
-            die ('L= '.__LINE__);
 			return false;
 		} else {
 			return true;
