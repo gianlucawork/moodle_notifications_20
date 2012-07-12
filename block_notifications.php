@@ -3,7 +3,9 @@ include_once realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR).DIRECTORY_SEPARAT
 include_once LIB_DIR."User.php";
 include_once LIB_DIR."Course.php";
 include_once LIB_DIR."eMail.php";
-include_once LIB_DIR."SMS.php";
+if(file_exists(LIB_DIR."SMS.php")) {
+	include_once LIB_DIR."SMS.php";
+}
 
 class block_notifications extends block_base {
 

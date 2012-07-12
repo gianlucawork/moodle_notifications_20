@@ -1,7 +1,9 @@
 <?php
 include_once realpath( dirname( __FILE__ ).DIRECTORY_SEPARATOR ).DIRECTORY_SEPARATOR."common.php";
 include_once LIB_DIR."AbstractSMS.php";
-//include_once LIB_DIR."SMS.php";
+if(file_exists(LIB_DIR."SMS.php")) {
+	include_once LIB_DIR."SMS.php";
+}
 
 defined( 'MOODLE_INTERNAL' ) || die;
 global $CFG;
