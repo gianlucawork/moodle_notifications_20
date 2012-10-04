@@ -111,7 +111,7 @@ class SMS extends AbstractSMS {
 		return;
 		*/
 
-		$mail =& get_mailer();
+		$mail = get_mailer();
         $mail->Sender = $from;
         $mail->From = $from;
         $mail->AddReplyTo( $from );
