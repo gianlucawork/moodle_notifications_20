@@ -209,7 +209,7 @@ class Course {
 	function initialize_log( $course ){
 		global $DB;
 
-		$modinfo =& get_fast_modinfo( $course );
+		$modinfo = get_fast_modinfo( $course );
 		// drop all previous records
 		$DB->delete_records( 'block_notifications_log', array('course_id'=>$course->id)  );
 		// add new records
