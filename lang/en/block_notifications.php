@@ -1,5 +1,8 @@
 <?php
 $string['pluginname'] = 'Notifications';
+$string['notifications'] = 'Notifications';
+$string['notifications:addinstance'] = 'Add Notifications block';
+$string['notifications:myaddinstance'] = 'Add Notifications block to My Moodle Page';
 $string['configuration_comment'] = 'None notification channel enabled.';
 $string['global_configuration_comment'] = 'Globally enabled notification channels.';
 $string['notify_by_email'] = 'Notify by e-mail';
