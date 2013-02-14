@@ -27,12 +27,14 @@ class eMail {
 		$mailbody .= '<div class="content">';
 		$mailbody .= '<ul>';
 
-		foreach ( $changelist as $change ) {
+		foreach ( $changelist as $item ) {
 			$mailbody .='<li>';
-			$mailbody .= get_string( $change->action, 'block_notifications' ).' ';
-			$mailbody .= get_string( $change->type, 'block_notifications' )." : ";
-			if ( $change->action != "deleted") {
-				$mailbody .="<a href=\"$CFG->wwwroot/mod/$change->type/view.php?id=$change->module_id\">$change->name</a>";
+			$mailbody .= get_string( $item->action, 'block_notifications' ).' ';
+			$mailbody .= get_string( $item->type, 'block_notifications' )." : ";
+			if ( $item->action != "deleted") {
+				$mailbody .="<a href=\"$CFG->wwwroot/mod/$item->type/view.php?id=$item->module_id\">$item->name</a>";
+			} else {
+				$mailbody .="$item->name";
 			}
 			$mailbody .= '</li>';
 		}
@@ -50,21 +52,15 @@ class eMail {
 		$mailbody = get_string( 'mailsubject', 'block_notifications' ).': '.$course->fullname.' ';
 		$mailbody .= $CFG->wwwroot.'/course/view.php?id='.$course->id."\r\n\r\n";
 
-		foreach ( $changelist as $change ) {
-			$mailbody .= "\t".get_string( $change->action, 'block_notifications' ).' ';
-			$mailbody .= "\t".get_string( $change->type, 'block_notifications' )." : ";
-			$mailbody .= $change->name."\r\n";
+		foreach ( $changelist as $item ) {
+			$mailbody .= "\t".get_string( $item->action, 'block_notifications' ).' ';
+			$mailbody .= "\t".get_string( $item->type, 'block_notifications' )." : ";
+			$mailbody .= $item->name."\r\n";
 
-			if ( $change->action != "deleted") {
-				$mailbody .= "\t$CFG->wwwroot/mod/$change->type/view.php?id=$change->module_id\r\n\r\n";
+			if ( $item->action != "deleted") {
+				$mailbody .= "\t$CFG->wwwroot/mod/$item->type/view.php?id=$item->module_id\r\n\r\n";
 			}
 		}
-		/*
-		print_r("\n");
-		print_r("\n");
-		print_r("\n");
-		print_r($mailbody);
-		*/
 		return $mailbody;
 	}
 }

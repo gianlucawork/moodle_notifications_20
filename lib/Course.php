@@ -219,8 +219,7 @@ class Course {
 				$module->modname == 'label' or
 				$module->visible == 0 or
 				( $module->available != 1 and $module->showavailability == 0 )
-			) {
-				continue; }
+			) { continue; }
 
 			$new_record = new Object();
 			$new_record->course_id = $course->id;
@@ -263,7 +262,7 @@ class Course {
 		if ( empty($entry) ) {
 			return null;
 		} else {
-			return  current( $entry );
+			return current( $entry );
 		}
 	}
 
