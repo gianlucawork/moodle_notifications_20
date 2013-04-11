@@ -140,8 +140,8 @@ class block_notifications extends block_base {
 				$up_interface.='</div>'; // div d end
 			}
 			$up_interface.='</form>';
-			$up_interface.='<input type="button" name="save_user_preferences" value="Save" onclick="save_user_preferences()" />';
-			$up_interface.='<input type="button" name="cancel" value="Cancel" onclick="hide_user_preferences_panel()" />';
+			$up_interface.='<input type="button" name="save_user_preferences" value="'.get_string('savechanges').'" onclick="save_user_preferences()" />';
+			$up_interface.='<input type="button" name="cancel" value="'.get_string('cancel').'" onclick="hide_user_preferences_panel()" />';
 			$up_interface.='</div>'; // div a end
 			$up_interface.='</div>'; // main div end
 			return $up_interface;
