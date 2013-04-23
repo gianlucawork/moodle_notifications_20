@@ -34,6 +34,7 @@ $string['updated'] = 'Updated';
 $string['added'] = 'Added';
 $string['deleted'] = 'Deleted';
 // MODULES
+$string['assign'] = 'Assignment';
 $string['assignment'] = 'Assignment';
 $string['chat'] = 'Chat';
 $string['url'] = 'Web link';
