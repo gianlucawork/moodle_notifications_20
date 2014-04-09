@@ -28,7 +28,24 @@ class block_notifications extends block_base {
 			"block_notifications_rss_shortname_url_param" => 0,
 			"block_notifications_frequency" => 12,
 			"block_notifications_email_notification_preset" => 1,
-			"block_notifications_sms_notification_preset" => 1
+			"block_notifications_action_added" => 1,
+			"block_notifications_action_updated" => 1,
+			"block_notifications_action_edited" => 1,
+			"block_notifications_action_deleted" => 1,
+			"block_notifications_action_added_discussion" => 1,
+			"block_notifications_action_deleted_discussion" => 1,
+			"block_notifications_action_added_post" => 0,
+			"block_notifications_action_updated_post" => 0,
+			"block_notifications_action_deleted_post" => 0,
+			"block_notifications_action_added_chapter" => 1,
+			"block_notifications_action_updated_chapter" => 1,
+			"block_notifications_action_added_entry" => 1,
+			"block_notifications_action_updated_entry" => 1,
+			"block_notifications_action_deleted_entry" => 1,
+			"block_notifications_action_added_fields" => 0,
+			"block_notifications_action_updated_fields" => 0,
+			"block_notifications_action_deleted_fields" => 0,
+			"block_notifications_action_edited_questions" => 1
 		);
 		return parent::config_save($global_config);
 	}
@@ -42,6 +59,24 @@ class block_notifications extends block_base {
 		unset($CFG->block_notifications_frequency);
 		unset($CFG->block_notifications_email_notification_preset);
 		unset($CFG->block_notifications_sms_notification_preset);
+		unset($CFG->block_notifications_action_added);
+		unset($CFG->block_notifications_action_updated);
+		unset($CFG->block_notifications_action_edited);
+		unset($CFG->block_notifications_action_deleted);
+		unset($CFG->block_notifications_action_added_discussion);
+		unset($CFG->block_notifications_action_deleted_discussion);
+		unset($CFG->block_notifications_action_added_post);
+		unset($CFG->block_notifications_action_updated_post);
+		unset($CFG->block_notifications_action_deleted_post);
+		unset($CFG->block_notifications_action_added_chapter);
+		unset($CFG->block_notifications_action_updated_chapter);
+		unset($CFG->block_notifications_action_added_entry);
+		unset($CFG->block_notifications_action_updated_entry);
+		unset($CFG->block_notifications_action_deleted_entry);
+		unset($CFG->block_notifications_action_added_fields);
+		unset($CFG->block_notifications_action_updated_fields);
+		unset($CFG->block_notifications_action_deleted_fields);
+		unset($CFG->block_notifications_action_edited_questions);
 		return true;
 	}
 

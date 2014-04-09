@@ -9,73 +9,12 @@ class SMS extends AbstractSMS {
 	public function message( $changelist, $course ) {
 		global $CFG;
 		$charmax = 160;
-		// create actions arrays
-		$added = array();
-		$updated = array();
-		$deleted = array();
 
-		foreach( $changelist as $entry ) {
-			switch( $entry->action ) {
-				case "added":
-
-					if( array_key_exists($entry->type, $added) ) {
-						$added[$entry->type] += 1;
-					} else {
-						$added[$entry->type] = 1;
-					}
-					break;
-
-				case "updated":
-					if( array_key_exists($entry->type, $updated) ) {
-						$updated[$entry->type] += 1;
-					} else {
-						$updated[$entry->type] = 1;
-					}
-					break;
-
-				case "deleted":
-					if(array_key_exists($entry->type, $deleted))
-						$deleted[$entry->type] += 1;
-					else
-						$deleted[$entry->type] = 1;
-					break;
-			}
+		foreach ( $changelist as $item ) {
+			$smsbody .= get_string( $item->action, 'block_notifications' ).'-';
+			$smsbody .= get_string( $item->type, 'block_notifications' ).": ";
+			$smsbody .= $item->name."\r\n";
 		}
-
-		$smsbody = "";
-		if( count($added) > 0 ) {
-			// added items
-			$smsbody .= get_string( 'added', 'block_notifications' ).': ';
-			foreach ( $added as $module => $number ) {
-				$smsbody .= $number.' ';
-				$smsbody .= get_string($module, 'block_notifications').', ';
-			}
-			// remove the last coma symbol
-			$smsbody = substr( $smsbody, 0, -2 );
-		}
-
-		if( count($updated) > 0 ) {
-			// added items
-			$smsbody .= get_string( 'updated', 'block_notifications' ).': ';
-			foreach ( $updated as $module => $number ) {
-				$smsbody .= $number.' ';
-				$smsbody .= get_string( $module, 'block_notifications' ).', ';
-			}
-			// remove the last come symbol
-			$smsbody = substr( $smsbody, 0, -2 );
-		}
-
-		if( count($deleted) > 0 ) {
-			// added items
-			$smsbody .= get_string( 'deleted', 'block_notifications' ).': ';
-			foreach ( $deleted as $module => $number ) {
-				$smsbody .= $number.' ';
-				$smsbody .= get_string( $module, 'block_notifications' ).', ';
-			}
-			// remove the last come symbol
-			$smsbody = substr( $smsbody, 0, -2 );
-		}
-
 		return $smsbody;
 	}
 
@@ -102,12 +41,12 @@ class SMS extends AbstractSMS {
 		}
 
 		/*
-		echo '<br />';
+		echo "\n\n";
 		echo "$from\n\n";
 		echo "$to\n\n";
 		echo "$subject\n\n";
 		echo "$smsmessage\n\n";
-		echo '<br />';
+		echo "\n\n";
 		return;
 		*/
 

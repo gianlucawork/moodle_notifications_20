@@ -54,24 +54,73 @@ class RSS {
 			$output .= '<description>'.get_string('rss_empty_description', 'block_notifications').'</description>';
 			$output .= "</item>";
 		} else {
+			$separator = ' - ';
 			foreach( $logs as $log ) {
 				$output .= "<item>";
 				$output .= '<title>'.get_string($log->type, 'block_notifications').'</title>';
-				if($log->action == 'deleted')
+				if ( preg_match('/^delete/', $log->action) ) {
 					$output .= "<link></link>";
-				else
+				} else if(empty($log->url)){
 					$output .= "<link>$CFG->wwwroot/mod/$log->type/view.php?id=$log->module_id</link>";
+				} else {
+					$output .= "<link>$CFG->wwwroot/mod/$log->type/".htmlentities($log->url)."</link>";
+				}
 
 				$output .= "<description>";
 				switch( $log->action ) {
 					case 'added':
-						$output .= get_string('added', 'block_notifications').' ';
+						$output .= get_string('added', 'block_notifications').$separator;
 						break;
 					case 'updated':
-						$output .= get_string('updated', 'block_notifications').' ';
+						$output .= get_string('updated', 'block_notifications').$separator;
 						break;
 					case 'deleted':
-						$output .= get_string('deleted', 'block_notifications').' ';
+						$output .= get_string('deleted', 'block_notifications').$separator;
+						break;
+					case 'edited':
+						$output .= get_string('edited', 'block_notifications').$separator;
+						break;
+					case 'added_discussion':
+						$output .= get_string('added_discussion', 'block_notifications').$separator;
+						break;
+					case 'deleted_discussion':
+						$output .= get_string('deleted_discussion', 'block_notifications').$separator;
+						break;
+					case 'added_post':
+						$output .= get_string('added_post', 'block_notifications').$separator;
+						break;
+					case 'updated_post':
+						$output .= get_string('updated_post', 'block_notifications').$separator;
+						break;
+					case 'deleted_post':
+						$output .= get_string('deleted_post', 'block_notifications').$separator;
+						break;
+					case 'added_chapter':
+						$output .= get_string('added_chapter', 'block_notifications').$separator;
+						break;
+					case 'updated_chapter':
+						$output .= get_string('updated_chapter', 'block_notifications').$separator;
+						break;
+					case 'added_entry':
+						$output .= get_string('added_entry', 'block_notifications').$separator;
+						break;
+					case 'updated_entry':
+						$output .= get_string('updated_entry', 'block_notifications').$separator;
+						break;
+					case 'deleted_entry':
+						$output .= get_string('deleted_entry', 'block_notifications').$separator;
+						break;
+					case 'added_fields':
+						$output .= get_string('added_fields', 'block_notifications').$separator;
+						break;
+					case 'updated_fields':
+						$output .= get_string('updated_fields', 'block_notifications').$separator;
+						break;
+					case 'deleted_fields':
+						$output .= get_string('deleted_fields', 'block_notifications').$separator;
+						break;
+					case 'edited_questions':
+						$output .= get_string('edited_questions', 'block_notifications').$separator;
 						break;
 				}
 				$output .= get_string( $log->type, 'block_notifications' ).': ';

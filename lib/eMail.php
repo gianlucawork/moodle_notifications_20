@@ -9,7 +9,7 @@ class eMail {
 		$text_message = $this->text_mail( $changelist, $course );
 		$subject = get_string('mailsubject', 'block_notifications');
 		$subject.= ": ".format_string( $course->fullname, true );
-		email_to_user( $user,'', $subject, $text_message, $html_message );
+		email_to_user( $user, '', $subject, $text_message, $html_message );
 	}
 
 
@@ -29,12 +29,14 @@ class eMail {
 
 		foreach ( $changelist as $item ) {
 			$mailbody .='<li>';
-			$mailbody .= get_string( $item->action, 'block_notifications' ).' ';
+			$mailbody .= get_string( $item->action, 'block_notifications' ).'; ';
 			$mailbody .= get_string( $item->type, 'block_notifications' )." : ";
-			if ( $item->action != "deleted") {
+			if ( preg_match('/^delete/', $item->action) ) {
+				$mailbody .="$item->name";
+			} else if(empty($item->url)){
 				$mailbody .="<a href=\"$CFG->wwwroot/mod/$item->type/view.php?id=$item->module_id\">$item->name</a>";
 			} else {
-				$mailbody .="$item->name";
+				$mailbody .="<a href=\"$CFG->wwwroot/mod/$item->type/$item->url\">$item->name</a>";
 			}
 			$mailbody .= '</li>';
 		}
@@ -53,12 +55,16 @@ class eMail {
 		$mailbody .= $CFG->wwwroot.'/course/view.php?id='.$course->id."\r\n\r\n";
 
 		foreach ( $changelist as $item ) {
-			$mailbody .= "\t".get_string( $item->action, 'block_notifications' ).' ';
+			$mailbody .= "\t".get_string( $item->action, 'block_notifications' ).'; ';
 			$mailbody .= "\t".get_string( $item->type, 'block_notifications' )." : ";
 			$mailbody .= $item->name."\r\n";
 
-			if ( $item->action != "deleted") {
+			if ( preg_match('/^delete/', $item->action) ) {
+				$mailbody .="$item->name";
+			} else if(empty($item->url)){
 				$mailbody .= "\t$CFG->wwwroot/mod/$item->type/view.php?id=$item->module_id\r\n\r\n";
+			} else {
+				$mailbody .= "\t$CFG->wwwroot/mod/$item->type/$item->url\r\n\r\n";
 			}
 		}
 		return $mailbody;

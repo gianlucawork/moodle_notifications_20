@@ -1,31 +1,120 @@
-    Several bugfixes for new version: 1.0.3
+==========================================================================================	
+	Version - 1.4 Extended the notified actions on the course
+==========================================================================================	
+
+Extended the range of the notified actions. Here is the complete list:
+
+=> Added				: A module has been added to a course
+=> Updated 				: A module has been updated
+=> Deleted				: A module has been deleted
+=> New chapter			: A new chapter has been added to a Book
+=> Updated chapter		: A chapter has been updated
+=> Edited				: The content of a Wiki has been modified
+=> New discussion		: A new discussion has been added to a forum
+=> Deleted discussion	: A discussion has been deleted
+=> New post				: A post has been added to a discussion (disabled by default)
+=> Updated post			: A post has been updated (disabled by default)
+=> Deleted post			: A post is deleted (disabled by default)
+=> New entry			: A new entry has been added to a Glossary 
+=> Updated entry		: An entry of a Glossary has been updated
+=> Deleted entry		: An entry of the Glossary has been deleted
+=> New fields			: New field has been added to a Database activity
+=> Updated fields		: A field of a Database activity has been updated
+=> Deleted fields		: A field of a Database activity has been deleted
+=> Edited questions		: Questions modified or added to a Quiz
+
+Please check the UPGRADE.txt file for more information.
+
+==========================================================================================	
+	Version - 1.3.x Presets + Bugfixes
+==========================================================================================	
+
+Added user presets for channel preferences
     
-        Bugfix: Courses without teachers have broken RSS
-            --
-            Courses without teachers used to be a problem because of
-            the missing email fields inside RSS file. When the course
-            has no enrolled teachers a dummy email account is used.
-            --
+    Added presets for user channel preferences. These presets can be
+    defined globally and on course level. They are the default preference
+    for the users. Every user can define his/her preference and overwrite
+    the default settings. The user preferences have precedence over the
+    default ones.
+
+RSS shortname url param as setting
     
-        Bugfix: Deletion of invisible modules is notified
-            --
-            This version of the plugin ignores invisible modules during
-            the course scansion. If a registered but invisible module is
-            deleted than the deletion is still notified. This is just a
-            matter of consistency because the addition of the module
-            has been notified before.
-            --
+    Added shortname as setting in the global and course configuration
+    panel.
+    Now is possible to set the shortname as RSS url parameter directly
+    from the configuration panel.
+
+Check the RSS by using the shortname as url option
     
-        Bugfix: The order in the RSS entries is messy.
-            --
-            This was due to the initial logging policy. Every module had
-            one entry in the log. Now every action is a different entry
-            in the log table.
-            --
+    Other than id now is possible to specify the shortname of the
+    course by passing the options shortname=Course_Shortname
+
+BUGFIXES:
+    Conditional activities support fixed
     
-        Bugfix: Email; deleted entries have a link which is obviously broken
-            --
-            No links for deleted entries anymore. The modules doesn't exist
-            so having a link is just pointless.
-            --
+		The conditional activities were not managed correctly.
+		Now all the conditional activities which are set to be
+		invisible until the condition is matched are ignored.
+		Once the condition is matched the activity/resource is
+		treated as new and is notified through available channels.
+
+
+==========================================================================================	
+	Version 1.2; merge BUGFIX; documentation updated
+==========================================================================================	
+
+BUGFIX:
+- The Italian translation was missing in the last merge.
+
+- The css selectors in the javascript functions were not adapted
+to the new block name. So the user preferences ui was broken.
+
+- The Course.php class had die() statements in two functions
+instead of the return null; statements.
+The null value was supposed to be returned so the die() statements
+have been removed.
+
+UPDATES:
+- The README.txt and UPGRADE.txt have been updated.
+
+NOTE:
+- This commit brokes the backward compatibility so the major version
+release is needed. That's why this is now the 1.2 version.
+
+THANKS:
+- to Nicolas Dunand for contribution.  https://github.com/ndunand/
+
+
+==========================================================================================	
+	Several bugfixes for new version: 1.0.3
+==========================================================================================	
+	
+Bugfix: Courses without teachers have broken RSS
+	--
+	Courses without teachers used to be a problem because of
+	the missing email fields inside RSS file. When the course
+	has no enrolled teachers a dummy email account is used.
+	--
+
+Bugfix: Deletion of invisible modules is notified
+	--
+	This version of the plugin ignores invisible modules during
+	the course scansion. If a registered but invisible module is
+	deleted than the deletion is still notified. This is just a
+	matter of consistency because the addition of the module
+	has been notified before.
+	--
+
+Bugfix: The order in the RSS entries is messy.
+	--
+	This was due to the initial logging policy. Every module had
+	one entry in the log. Now every action is a different entry
+	in the log table.
+	--
+
+Bugfix: Email; deleted entries have a link which is obviously broken
+	--
+	No links for deleted entries anymore. The modules doesn't exist
+	so having a link is just pointless.
+	--
 
