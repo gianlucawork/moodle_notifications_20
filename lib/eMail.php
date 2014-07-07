@@ -27,17 +27,12 @@ class eMail {
 		$mailbody .= '<div class="content">';
 		$mailbody .= '<ul>';
 
+		$events = report_eventlist_list_generator::get_all_events_list();
+
 		foreach ( $changelist as $item ) {
 			$mailbody .='<li>';
-			$mailbody .= get_string( $item->action, 'block_notifications' ).'; ';
-			$mailbody .= get_string( $item->type, 'block_notifications' )." : ";
-			if ( preg_match('/^delete/', $item->action) ) {
-				$mailbody .="$item->name";
-			} else if(empty($item->url)){
-				$mailbody .="<a href=\"$CFG->wwwroot/mod/$item->type/view.php?id=$item->module_id\">$item->name</a>";
-			} else {
-				$mailbody .="<a href=\"$CFG->wwwroot/mod/$item->type/$item->url\">$item->name</a>";
-			}
+			$mailbody .= preg_replace('/\\\.*$/', '', $events[$item->event]['raweventname']) . ' on ' . date("D M j G:i:s T Y", $item->time_created);
+			$mailbody .=": <a href=\"".$this->extract_url($item)."\">$item->name</a>";
 			$mailbody .= '</li>';
 		}
 
@@ -54,20 +49,26 @@ class eMail {
 		$mailbody = get_string( 'mailsubject', 'block_notifications' ).': '.$course->fullname.' ';
 		$mailbody .= $CFG->wwwroot.'/course/view.php?id='.$course->id."\r\n\r\n";
 
-		foreach ( $changelist as $item ) {
-			$mailbody .= "\t".get_string( $item->action, 'block_notifications' ).'; ';
-			$mailbody .= "\t".get_string( $item->type, 'block_notifications' )." : ";
-			$mailbody .= $item->name."\r\n";
+		$events = report_eventlist_list_generator::get_all_events_list();
 
-			if ( preg_match('/^delete/', $item->action) ) {
-				$mailbody .="$item->name";
-			} else if(empty($item->url)){
-				$mailbody .= "\t$CFG->wwwroot/mod/$item->type/view.php?id=$item->module_id\r\n\r\n";
-			} else {
-				$mailbody .= "\t$CFG->wwwroot/mod/$item->type/$item->url\r\n\r\n";
-			}
+		foreach ( $changelist as $item ) {
+			$mailbody .= preg_replace('/\\\.*$/', '', $events[$item->event]['raweventname']) . ' on ' . date("D M j G:i:s T Y", $item->time_created);
+			$mailbody .= ": $item->name";
+			$mailbody .="\r\n".$this->extract_url($item)."\r\n\r\n";
 		}
 		return $mailbody;
+	}
+
+	function extract_url($log_entry) {
+		global $CFG;
+
+		$url = "$CFG->wwwroot/mod/$log_entry->module/view.php?id=$log_entry->module_id";
+		switch($log_entry->target) {
+			case 'chapter':
+				$url .= "&chapterid=$log_entry->target_id";
+			break;
+		}
+		return $url;
 	}
 }
 ?>

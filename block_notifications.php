@@ -18,67 +18,9 @@ class block_notifications extends block_base {
 
 	function has_config() { return true; }
 
-	function after_install() {
-		global $CFG;
-		// initialize the global configuration
-		$global_config = array(
-			"block_notifications_email_channel" => 1,
-			"block_notifications_sms_channel" => 1,
-			"block_notifications_rss_channel" => 1,
-			"block_notifications_rss_shortname_url_param" => 0,
-			"block_notifications_frequency" => 12,
-			"block_notifications_email_notification_preset" => 1,
-			"block_notifications_action_added" => 1,
-			"block_notifications_action_updated" => 1,
-			"block_notifications_action_edited" => 1,
-			"block_notifications_action_deleted" => 1,
-			"block_notifications_action_added_discussion" => 1,
-			"block_notifications_action_deleted_discussion" => 1,
-			"block_notifications_action_added_post" => 0,
-			"block_notifications_action_updated_post" => 0,
-			"block_notifications_action_deleted_post" => 0,
-			"block_notifications_action_added_chapter" => 1,
-			"block_notifications_action_updated_chapter" => 1,
-			"block_notifications_action_added_entry" => 1,
-			"block_notifications_action_updated_entry" => 1,
-			"block_notifications_action_deleted_entry" => 1,
-			"block_notifications_action_added_fields" => 0,
-			"block_notifications_action_updated_fields" => 0,
-			"block_notifications_action_deleted_fields" => 0,
-			"block_notifications_action_edited_questions" => 1
-		);
-		return parent::config_save($global_config);
-	}
+	function after_install() { }
 
-	function before_delete() {
-		global $CFG;
-		unset($CFG->block_notifications_email_channel);
-		unset($CFG->block_notifications_sms_channel);
-		unset($CFG->block_notifications_rss_channel);
-		unset($CFG->block_notifications_rss_shortname_url_param);
-		unset($CFG->block_notifications_frequency);
-		unset($CFG->block_notifications_email_notification_preset);
-		unset($CFG->block_notifications_sms_notification_preset);
-		unset($CFG->block_notifications_action_added);
-		unset($CFG->block_notifications_action_updated);
-		unset($CFG->block_notifications_action_edited);
-		unset($CFG->block_notifications_action_deleted);
-		unset($CFG->block_notifications_action_added_discussion);
-		unset($CFG->block_notifications_action_deleted_discussion);
-		unset($CFG->block_notifications_action_added_post);
-		unset($CFG->block_notifications_action_updated_post);
-		unset($CFG->block_notifications_action_deleted_post);
-		unset($CFG->block_notifications_action_added_chapter);
-		unset($CFG->block_notifications_action_updated_chapter);
-		unset($CFG->block_notifications_action_added_entry);
-		unset($CFG->block_notifications_action_updated_entry);
-		unset($CFG->block_notifications_action_deleted_entry);
-		unset($CFG->block_notifications_action_added_fields);
-		unset($CFG->block_notifications_action_updated_fields);
-		unset($CFG->block_notifications_action_deleted_fields);
-		unset($CFG->block_notifications_action_edited_questions);
-		return true;
-	}
+	function before_delete() { }
 
 	function applicable_formats() {
 		return array('course-view' => true);
@@ -99,7 +41,7 @@ class block_notifications extends block_base {
 		}
 		// intialize logs; perform this operation just once
 		if( !$Course->log_exists($COURSE->id) ) {
-			$Course->initialize_log($COURSE);
+			$Course->initialize_log($COURSE->id);
 		}
 	}
 
@@ -119,10 +61,11 @@ class block_notifications extends block_base {
 		global $COURSE;
 		global $USER;
 
+		$global_config = get_config('block_notifications');
 		// if admin user or both sms and email notifications
 		// are disabled in the course then do not display user preferences
 		if(
-			($CFG->block_notifications_email_channel != 1 and $CFG->block_notifications_sms_channel != 1) or
+			($global_config->email_channel != 1 and $global_config->sms_channel != 1) or
 			($course_registration->notify_by_email == 0 and $course_registration->notify_by_sms == 0 )
 		) {
 			return '';
@@ -164,13 +107,13 @@ class block_notifications extends block_base {
 			$up_interface.='<form id="user_preferences" action="">';
 			$up_interface.='<input type="hidden" name="user_id" value="'.$USER->id.'" />';
 			$up_interface.='<input type="hidden" name="course_id" value="'.$COURSE->id.'" />';
-			if ( $CFG->block_notifications_email_channel == 1 and $course_registration->notify_by_email == 1 ) {
+			if ( $global_config->email_channel == 1 and $course_registration->notify_by_email == 1 ) {
 				$up_interface.='<div>'; // div c
 				$up_interface.="<input type='checkbox' name='notify_by_email' value='1' $mail_notification_status />";
 				$up_interface.= get_string('notify_by_email', 'block_notifications');
 				$up_interface.='</div>'; // div c end
 			}
-			if ( class_exists('SMS') and $CFG->block_notifications_sms_channel == 1 and $course_registration->notify_by_sms == 1 ) {
+			if ( class_exists('SMS') and $global_config->sms_channel == 1 and $course_registration->notify_by_sms == 1 ) {
 				$up_interface.='<div>'; // div d end
 				$up_interface.="<input type='checkbox' name='notify_by_sms' value='1' $sms_notification_status />";
 				$up_interface.= get_string('notify_by_sms', 'block_notifications');
@@ -201,10 +144,11 @@ class block_notifications extends block_base {
 
 		$this->content   = new stdClass;
 		$Course = new Course();
+		$global_config = get_config('block_notifications');
 		$course_registration = $Course->get_registration($COURSE->id);
 		
 		if (
-			( $CFG->block_notifications_email_channel != 1 and $CFG->block_notifications_sms_channel != 1 and $CFG->block_notifications_rss_channel != 1) or
+			( $global_config->email_channel != 1 and $global_config->sms_channel != 1 and $global_config->rss_channel != 1) or
 			( $course_registration->notify_by_email == 0 and $course_registration->notify_by_sms == 0 and $course_registration->notify_by_rss == 0 )
 		){
 
@@ -217,7 +161,7 @@ class block_notifications extends block_base {
 			$this->content->text.= ": ".date("j M Y G:i:s",$course_registration->last_notification_time);
 			$this->content->text.= "</span><br />";
 
-			if ( $CFG->block_notifications_email_channel == 1 and $course_registration->notify_by_email == 1 ) {
+			if ( $global_config->email_channel == 1 and $course_registration->notify_by_email == 1 ) {
 				$this->content->text.= "<img src='$CFG->wwwroot/blocks/notifications/images/Mail-icon.png' ";
 				$this->content->text.= "alt='e-mail icon' ";
 				$this->content->text.= "title='".get_string('email_icon_tooltip', 'block_notifications')." ";
@@ -225,7 +169,7 @@ class block_notifications extends block_base {
 				//$this->content->text.= '<br />';
 			}
 
-			if ( $CFG->block_notifications_sms_channel == 1 and $course_registration->notify_by_sms == 1 and class_exists('SMS') ) {
+			if ( $global_config->sms_channel == 1 and $course_registration->notify_by_sms == 1 and class_exists('SMS') ) {
 				if( empty($USER->phone2) ) {
 					//$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/help.php?module=plugin&file=../blocks/notifications/lang/en_utf8/help/prova.html'>";
 					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/help.php'>";
@@ -241,7 +185,7 @@ class block_notifications extends block_base {
 				}
 				//$this->content->text.= '<br />';
 			}
-			if ( $CFG->block_notifications_rss_channel == 1 and $course_registration->notify_by_rss == 1 ) {
+			if ( $global_config->rss_channel == 1 and $course_registration->notify_by_rss == 1 ) {
 				if ( isset($course_registration->rss_shortname_url_param) and $course_registration->rss_shortname_url_param == 1 ) {
 					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/lib/RSS.php?shortname=$COURSE->shortname'>";
 				} else {
@@ -266,6 +210,7 @@ class block_notifications extends block_base {
 
 function cron() {
 		global $CFG;
+		echo '<pre>';
 		echo "\n\n****** notifications :: begin ******";
 		$User = new User();
 		// clean deleted users data
@@ -284,6 +229,8 @@ function cron() {
 			echo "\n****** notifications :: end ******\n\n";
 			return;
 		}
+
+		$global_config = get_config('block_notifications');
 
 		foreach($courses as $course) {
 			// if course is not visible then skip
@@ -320,21 +267,25 @@ function cron() {
 			// if course log entry does not exist
 			// or the last notification time is older than two days
 			// then reinitialize course log
-			if( !$Course->log_exists($course->id) or $course_registration->last_notification_time + 48*3600 < time() )
-				$Course->initialize_log($course);
+			if( !$Course->log_exists($course->id) or $course_registration->last_notification_time + 48*3600 < time() ) {
+				$Course->initialize_log($course->id);
+			}
 
 			// check notification frequency for the course and skip to next cron cycle if neccessary
+
 			if( $course_registration->last_notification_time + $course_registration->notification_frequency > time() ){
 				echo " - Skipping to next cron cycle.";
 				continue;
 			}
 
-			$Course->update_log($course);
+			$Course->update_log($course->id);
 
 			// check if the course has something new or not
 			$changelist = $Course->get_recent_activities($course->id);
+
 			// update the last notification time
 			$Course->update_last_notification_time($course->id, time());
+
 			if( empty($changelist) ) { continue; } // check the next course. No new items in this one.
 
 
@@ -344,7 +295,7 @@ function cron() {
 				// if the email notification is enabled in the course
 				// and if the user has set the emailing notification in preferences
 				// then send a notification by email
-				if( $CFG->block_notifications_email_channel == 1 and $course_registration->notify_by_email == 1 and $user_preferences->notify_by_email == 1 ) {
+				if( $global_config->email_channel == 1 and $course_registration->notify_by_email == 1 and $user_preferences->notify_by_email == 1 ) {
 					$eMail = new eMail();
 					$eMail->notify($changelist, $user, $course);
 				}
@@ -354,7 +305,7 @@ function cron() {
 				// then send a notification by sms
 				if(
 					class_exists('SMS') and
-					$CFG->block_notifications_sms_channel == 1 and
+					$global_config->sms_channel == 1 and
 					$course_registration->notify_by_sms == 1 and
 					$user_preferences->notify_by_sms == 1 and
 					!empty($user->phone2)
@@ -365,7 +316,7 @@ function cron() {
 			}
 		}
 		echo "\n****** notifications :: end ******\n\n";
-		return;
+		echo '</pre>';
 	}
 
 }

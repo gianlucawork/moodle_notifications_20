@@ -2,7 +2,42 @@
 //***************************************************
 // Course registration management
 //***************************************************
+include_once LIB_DIR."SupportedEvents.php";
+
 class Course {
+
+	protected $logger;
+
+	function __construct() {
+		$this->logger = get_log_manager()->get_readers()['logstore_standard'];
+	}
+
+	function dump($var) {
+		print_r('<pre>');
+		if(is_array($var)) {
+			print_r('<br />******************************************************');
+			print_r('<br />* ARRAY');
+			print_r('<br />******************************************************');
+			print_r('<br />');
+			foreach($var as $key => $content) {
+				print_r('<br />----------------<br />');
+				print_r('KEY: '. $key);
+				print_r('<br />----------------<br />');
+				print_r('CONTENT:');
+				print_r('<br />================================================<br />');
+				print_r($content);
+				print_r('<br />================================================<br />');
+			}
+		} else {
+			print_r('<br />******************************************************');
+			print_r('<br />* OBJECT');
+			print_r('<br />******************************************************');
+			print_r('<br />================================================<br />');
+			print_r($var);
+			print_r('<br />================================================<br />');
+		}
+		print_r('</pre>');
+	}
 
 	function register( $course_id, $starting_time ) {
 		global $DB;
@@ -72,86 +107,10 @@ class Course {
 	function update_course_notification_settings( $course_id, $settings ) {
 		global $DB;
 
-		$course=new Object();
+		$course = $settings;
 		$course->id = $this->get_registration_id( $course_id );
 		$course->course_id = $course_id;
-
-		$course->notify_by_email = 0;
-		if( isset($settings->notify_by_email) and $settings->notify_by_email == 1 ) { $course->notify_by_email = 1; }
-
-		$course->notify_by_sms = 0;
-		if( isset($settings->notify_by_sms) and $settings->notify_by_sms == 1 ) { $course->notify_by_sms = 1; }
-
-		$course->notify_by_rss = 0;
-		if( isset($settings->notify_by_rss) and $settings->notify_by_rss == 1 ) { $course->notify_by_rss = 1; }
-
-		$course->rss_shortname_url_param = 0;
-		if( isset($settings->rss_shortname_url_param) and $settings->rss_shortname_url_param == 1 ) { $course->rss_shortname_url_param = 1; }
-
-		if( isset($settings->notification_frequency) ) {
-			$course->notification_frequency = $settings->notification_frequency % 25 * 3600;
-		}
-
-		$course->email_notification_preset = 0;
-		if( isset($settings->email_notification_preset) and $settings->email_notification_preset == 1 ) { $course->email_notification_preset = 1; }
-
-		$course->sms_notification_preset = 0;
-		if( isset($settings->sms_notification_preset) and $settings->sms_notification_preset == 1 ) { $course->sms_notification_preset = 1; }
-
-		$course->action_added = 0;
-		if( isset($settings->action_added) and $settings->action_added == 1 ) { $course->action_added = 1; }
-
-		$course->action_updated = 0;
-		if( isset($settings->action_updated) and $settings->action_updated == 1 ) { $course->action_updated = 1; }
-
-		$course->action_edited = 0;
-		if( isset($settings->action_edited) and $settings->action_edited == 1 ) { $course->action_edited = 1; }
-
-		$course->action_deleted = 0;
-		if( isset($settings->action_deleted) and $settings->action_deleted == 1 ) { $course->action_deleted = 1; }
-
-		$course->action_added_discussion = 0;
-		if( isset($settings->action_added_discussion) and $settings->action_added_discussion == 1 ) { $course->action_added_discussion = 1; }
-
-		$course->action_deleted_discussion = 0;
-		if( isset($settings->action_deleted_discussion) and $settings->action_deleted_discussion == 1 ) { $course->action_deleted_discussion = 1; }
-
-		$course->action_added_post = 0;
-		if( isset($settings->action_added_post) and $settings->action_added_post == 1 ) { $course->action_added_post = 1; }
-
-		$course->action_updated_post = 0;
-		if( isset($settings->action_updated_post) and $settings->action_updated_post == 1 ) { $course->action_updated_post = 1; }
-
-		$course->action_deleted_post = 0;
-		if( isset($settings->action_deleted_post) and $settings->action_deleted_post == 1 ) { $course->action_deleted_post = 1; }
-
-		$course->action_added_chapter = 0;
-		if( isset($settings->action_added_chapter) and $settings->action_added_chapter == 1 ) { $course->action_added_chapter = 1; }
-
-		$course->action_updated_chapter = 0;
-		if( isset($settings->action_updated_chapter) and $settings->action_updated_chapter == 1 ) { $course->action_updated_chapter = 1; }
-
-		$course->action_added_entry = 0;
-		if( isset($settings->action_added_entry) and $settings->action_added_entry == 1 ) { $course->action_added_entry = 1; }
-
-		$course->action_updated_entry = 0;
-		if( isset($settings->action_updated_entry) and $settings->action_updated_entry == 1 ) { $course->action_updated_entry = 1; }
-
-		$course->action_deleted_entry = 0;
-		if( isset($settings->action_deleted_entry) and $settings->action_deleted_entry == 1 ) { $course->action_deleted_entry = 1; }
-
-		$course->action_added_fields = 0;
-		if( isset($settings->action_added_fields) and $settings->action_added_fields == 1 ) { $course->action_added_fields = 1; }
-
-		$course->action_updated_fields = 0;
-		if( isset($settings->action_updated_fields) and $settings->action_updated_fields == 1 ) { $course->action_updated_fields = 1; }
-
-		$course->action_deleted_fields = 0;
-		if( isset($settings->action_deleted_fields) and $settings->action_deleted_fields == 1 ) { $course->action_deleted_fields = 1; }
-
-		$course->action_edited_questions = 0;
-		if( isset($settings->action_edited_questions) and $settings->action_edited_questions == 1 ) { $course->action_edited_questions = 1; }
-
+		$course->notification_frequency = $settings->notification_frequency % 25 * 3600;
 		return $DB->update_record('block_notifications_courses', $course);
 	}
 
@@ -217,235 +176,134 @@ class Course {
 												( select parentcontextid from {$CFG->prefix}block_instances where blockname = 'notifications' ) );" );
 	}
 
-	function get_updated_and_deleted_modules( $course_id ){
+	// extract the logs for the course whose id is $course_id.
+	// the last_notification_time can be an integer or null, if it is null then the block_notification_courses table value is used.
+	function extract_standard_logs( $course_id, $last_notification_time ){
 		global $DB, $CFG;
 		$course_registration = $this->get_registration( $course_id );
-		//$last_notification_time = $this->get_last_notification_time( $course_id );
-		$last_notification_time = $course_registration->last_notification_time;
-		$actions = "";
-		if($CFG->block_notifications_action_added == 1 and $course_registration->action_added == 1) {
-			$actions.= "'add',";
+		$global_config = get_config('block_notifications');
+		// use the block_notification_courses table value if the passed time is null
+
+		if(is_null($last_notification_time)) {
+			$last_notification_time = $course_registration->last_notification_time;
 		}
-		if($CFG->block_notifications_action_updated == 1 and $course_registration->action_updated == 1) {
-			$actions.= "'update',";
-		}
-		if($CFG->block_notifications_action_deleted == 1 and $course_registration->action_deleted == 1) {
-			$actions.= "'delete mod',";
-		}
-		if($CFG->block_notifications_action_added_chapter == 1 and $course_registration->action_added_chapter == 1) {
-			$actions.= "'add chapter',";
-		}
-		if($CFG->block_notifications_action_updated_chapter == 1 and $course_registration->action_updated_chapter == 1) {
-			$actions.= "'update chapter',";
-		}
-		if($CFG->block_notifications_action_edited == 1 and $course_registration->action_edited == 1) {
-			$actions.= "'edit',";
-		}
-		if($CFG->block_notifications_action_added_discussion == 1 and $course_registration->action_added_discussion == 1) {
-			$actions.= "'add discussion',";
-		}
-		if($CFG->block_notifications_action_deleted_discussion == 1 and $course_registration->action_deleted_discussion == 1) {
-			$actions.= "'delete discussion',";
-		}
-		if($CFG->block_notifications_action_added_post == 1 and $course_registration->action_added_post == 1) {
-			$actions.= "'add post',";
-		}
-		if($CFG->block_notifications_action_updated_post == 1 and $course_registration->action_updated_post == 1) {
-			$actions.= "'update post',";
-		}
-		if($CFG->block_notifications_action_deleted_post == 1 and $course_registration->action_deleted_post == 1) {
-			$actions.= "'delete post',";
-		}
-		if($CFG->block_notifications_action_added_entry == 1 and $course_registration->action_added_entry == 1) {
-			$actions.= "'add entry',";
-		}
-		if($CFG->block_notifications_action_updated_entry == 1 and $course_registration->action_updated_entry == 1) {
-			$actions.= "'update entry',";
-		}
-		if($CFG->block_notifications_action_deleted_entry == 1 and $course_registration->action_deleted_entry == 1) {
-			$actions.= "'delete entry',";
-		}
-		if($CFG->block_notifications_action_added_fields == 1 and $course_registration->action_added_fields == 1) {
-			$actions.= "'fields add',";
-		}
-		if($CFG->block_notifications_action_updated_fields == 1 and $course_registration->action_updated_fields == 1) {
-			$actions.= "'fields update',";
-		}
-		if($CFG->block_notifications_action_deleted_fields == 1 and $course_registration->action_deleted_fields == 1) {
-			$actions.= "'fields delete',";
-		}
-		if($CFG->block_notifications_action_edited_questions == 1 and $course_registration->action_edited_questions == 1) {
-			$actions.= "'editquestions'";
+		$events = '';
+		//$standard_names = SupportedEvents::getStandardNames();
+		foreach(SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
+			$eventname = preg_replace('/\\\/', '_', $platform_event_name);
+			$eventname = preg_replace('/^_/', '', $eventname);
+
+			if($global_config->$eventname == 1 and $course_registration->$block_instance_setting == 1) {
+				$events .= "'".addslashes($platform_event_name)."',";
+			}
 		}
 		// remove the last comma
-		if(empty($actions)) {
+		if(empty($events)) {
 			return false;
 		} else {
-			$actions = rtrim($actions, ',');
-			return $DB->get_records_select( 'log', "course=$course_id and action in ($actions) and module != 'calendar' and time > $last_notification_time group by cmid,action,url", null, 'cmid,action' );
+			$events = rtrim($events, ',');
+			$logs = $this->logger->get_events_select("courseid = $course_id and eventname in ($events) and timecreated > $last_notification_time", array(), '', 0, 0);
+			return $logs;
 		}
 	}
 
 
 
-	function update_log( $course ){
-		global $DB;
-
-		$modinfo =& get_fast_modinfo($course);
-		foreach($modinfo->cms as $cms => $module) {
-			// skip labels, invisible modules and logged modules
-
-			if(
-				$module->modname == 'label' or
-				$module->visible == 0 or
-				( $module->available != 1 and $module->showavailability == 0 ) or
-				$this->is_module_logged($course->id, $module->id, $module->modname)
-			) {
-				continue;
-			}
-
-			$new_record = new Object();
-			$new_record->course_id = $course->id;
-			$new_record->module_id = $module->id;
-			$new_record->name = $module->name;
-			$new_record->type = $module->modname;
-			$new_record->action = 'added';
-			$new_record->status = 'pending';
-
-			$DB->insert_record( 'block_notifications_log', $new_record );
-		}
-		// update records
-		$course_updates = $this->get_updated_and_deleted_modules( $course->id );
-
-		// if no course updates available then return
-		if( empty($course_updates) ) return;
-
-		foreach($course_updates as $course_update) {
-			// if $log_row is empty than this module has not been registered
-			// it is probably invisible
-			$log_row = $this->get_log_entry($course_update->cmid);
-			if ( empty($log_row) ) {
-				continue;
-			} else {
-				$new_record = new Object();
-				$new_record->course_id = $log_row->course_id;
-				$new_record->module_id = $log_row->module_id;
-				$new_record->url = $course_update->url;
-				$new_record->type = $log_row->type;
-				$new_record->status = 'pending';
-				// set the name
-				if(empty($modinfo->cms[$log_row->module_id])) {
-					$new_record->name = $log_row->name;
-				} else {
-					$new_record->name = $modinfo->cms[$log_row->module_id]->name;
-				}
-				switch($course_update->action) {
-					case 'add':
-						$new_record->action = 'added';
-					break;
-
-					case 'update':
-						$new_record->action = 'updated';
-					break;
-
-					case 'edit':
-						$new_record->action = 'edited';
-					break;
-
-					case 'delete mod':
-						$new_record->action = 'deleted';
-					break;
-
-					case 'add discussion':
-						$new_record->action = 'added_discussion';
-					break;
-
-					case 'delete discussion':
-						$new_record->action = 'deleted_discussion';
-					break;
-
-					case 'add post':
-						$new_record->action = 'added_post';
-					break;
-
-					case 'update post':
-						$new_record->action = 'updated_post';
-					break;
-
-					case 'delete post':
-						$new_record->action = 'deleted_post';
-					break;
-
-					case 'add chapter':
-						$new_record->action = 'added_chapter';
-					break;
-
-					case 'update chapter':
-						$new_record->action = 'updated_chapter';
-					break;
-
-					case 'add entry':
-						$new_record->action = 'added_entry';
-					break;
-
-					case 'update entry':
-						$new_record->action = 'updated_entry';
-					break;
-
-					case 'delete entry':
-						$new_record->action = 'deleted_entry';
-					break;
-
-					case 'fields add':
-						$new_record->action = 'added_fields';
-						$new_record->url = null; // the url does not work in this activity
-					break;
-
-					case 'fields update':
-						$new_record->action = 'updated_fields';
-						$new_record->url = null; // the url does not work in this activity
-					break;
-
-					case 'fields delete':
-						$new_record->action = 'deleted_fields';
-					break;
-
-					case 'editquestions':
-						$new_record->action = 'edited_questions';
-					break;
-				}
-
-				$DB->insert_record( 'block_notifications_log', $new_record );
-			}
-		}
-
+	function update_log( $course_id ){
+		$registration = $this->get_registration($course_id);
+		$this->populate_log($registration->course_id, $registration->last_notification_time, 0);
 	}
 
-	function initialize_log( $course ){
-		global $DB;
+	function initialize_log( $course_id ){
+		$this->populate_log($course_id, 0, 1);
+	}
 
-		$modinfo = get_fast_modinfo( $course );
-		// drop all previous records
-		$DB->delete_records( 'block_notifications_log', array('course_id'=>$course->id)  );
+	function populate_log( $course, $time, $status ){
+		global $DB;
+		// extract log
+		$modinfo = get_fast_modinfo($course);
+		$logs = $this->extract_standard_logs($course, $time);
+		if(empty($logs)) {
+			return; // no logs have to be updated
+		}
 		// add new records
-		foreach( $modinfo->cms as $cms => $module ) {
-			// filter labels and invisible modules
-			if(
-				$module->modname == 'label' or
-				$module->visible == 0 or
-				( $module->available != 1 and $module->showavailability == 0 )
-			) { continue; }
-
+		foreach( $logs as $log) {
+			// filter invisible modules
+			$skip_module = false;
 			$new_record = new Object();
-			$new_record->course_id = $course->id;
-			$new_record->module_id = $module->id;
-			$new_record->name = $module->name;
-			$new_record->type = $module->modname;
-			$new_record->action = 'added';
-			$new_record->status = 'notified';
+			switch($log->get_data()['eventname']) {
+				case '\core\event\calendar_event_created':
+					$new_record->module = $log->get_data()['target'];
+					$new_record->name = $log->get_data()['other']['name'];
+				break;
+
+				case '\core\event\calendar_event_updated':
+					$new_record->module = $log->get_data()['target'];
+					$new_record->name = $log->get_data()['other']['name'];
+				break;
+
+				case '\core\event\calendar_event_deleted':
+					$new_record->module = $log->get_data()['target'];
+					$new_record->name = $log->get_data()['other']['name'];
+				break;
+
+				default:
+					// try to get the module from the course
+					try {
+						$module = $modinfo->get_cm($log->get_data()['contextinstanceid']);
+						// check if the module is visible.
+						// avoid logging invisible modules.
+						if(
+							$module->visible == 0 or
+							( $module->available != 1 and $module->showavailability == 0 )
+						) { $skip_module = true; }
+						$new_record->module = $module->modname;
+						$new_record->name = $module->name;
+					} catch (Exception $e) {
+						if($e->errorcode == 'invalidcoursemodule') {
+							// check if the module info can be extracted from the stardard log
+							if(isset($log->get_data()['other']['modulename'])) {
+								$new_record->module = $log->get_data()['other']['modulename'];
+							} else {
+								$new_record->module = 0;
+							}
+
+							if(isset($log->get_data()['other']['name'])) {
+								$new_record->name = $log->get_data()['other']['name'];
+							} else {
+								$new_record->name = '';
+							}
+						} else {
+							/*
+							print_r('<hr />');
+							$this->dump('ERRRRRRRRRRRRRROOOOOOOOOOOOOOOOORRRRRRRRRRRRRRRRR');
+							print_r('<hr />');
+							foreach($modinfo->get_cms() as $cm) {
+								print_r($cm->id . ' | ');
+							}
+							$this->dump($log);
+							$this->dump($e);
+							*/
+							throw $e;
+						}
+					}
+				break;
+			}
+
+			if($skip_module) { continue; }
+
+			$new_record->course_id = $log->get_data()['courseid'];
+			$new_record->event = $log->get_data()['eventname'];
+			$new_record->module_id = $log->get_data()['contextinstanceid'];
+			$new_record->target = $log->get_data()['target'];
+			$new_record->target_id = $log->get_data()['objectid'];
+			$new_record->time_created = $log->get_data()['timecreated'];
+			$new_record->status = $status;
 
 			$DB->insert_record( 'block_notifications_log', $new_record );
 		}
+
+		$this->fill_in_deleted_modules_names($course);
 	}
 
 	function is_module_logged( $course_id, $module_id, $type ){
@@ -500,12 +358,10 @@ class Course {
 							on ({$CFG->prefix}block_notifications_log.module_id = {$CFG->prefix}course_modules.id) ) logs_with_visibility";
 		// select all modules that are visible and whose status is pending
 		$recent_activities = $DB->get_records_sql( "select * from $subtable where course_id = $course_id and status='pending' and (visible = 1 or visible is null)" );
-		//print_r($recent_activities);
 		// clear all pending notifications
 		if(!empty($recent_activities))
-			$DB->execute( "update {$CFG->prefix}block_notifications_log set status = 'notified'
-								where
-									course_id = $course_id and status='pending'
+			$DB->execute( "update {$CFG->prefix}block_notifications_log set status = 1 
+								where course_id = $course_id and status = 0
 									and id in ( select id from $subtable where course_id = $course_id and (visible = 1 or visible is null) )" );
 		return $recent_activities;
 	}
@@ -514,6 +370,27 @@ class Course {
 		global $CFG, $DB;
 
 		return current( $DB->get_records_sql("select fullname, summary from {$CFG->prefix}course where id = $course_id") );
+	}
+
+	function extract_deleted_module_name( $course_id, $module, $module_id, $target, $target_id ) {
+		global $CFG, $DB;
+
+		return current( $DB->get_records_sql("select name from {$CFG->prefix}block_notifications_log where course_id = $course_id
+												 and module = '$module' and module_id = $module_id and target = '$target'
+												 and target_id = $target_id and name != '' order by id desc") );
+	}
+
+	function fill_in_deleted_modules_names( $course_id ) {
+		global $CFG, $DB;
+		$nameless_modules = $DB->get_records_sql("select * from {$CFG->prefix}block_notifications_log where course_id = $course_id and name = ''");
+		foreach($nameless_modules as $nameless_module) {
+			$entry = $this->extract_deleted_module_name($course_id, $nameless_module->module, $nameless_module->module_id, $nameless_module->target, $nameless_module->target_id);
+			if(isset($entry->name)) {
+				$DB->execute( "update {$CFG->prefix}block_notifications_log set name = '$entry->name' where course_id = $course_id
+								and module = '$nameless_module->module' and module_id = $nameless_module->module_id  
+								and target = '$nameless_module->target' and target_id = $nameless_module->target_id and name = ''");
+			}
+		}
 	}
 
 	// purge entries of courses that have been deleted

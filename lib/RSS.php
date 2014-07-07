@@ -2,14 +2,13 @@
 include_once realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."common.php";
 include_once LIB_DIR."Course.php";
 include_once LIB_DIR."User.php";
+
 class RSS {
 	function __construct( $course_id ){
 		global $CFG, $DB;
 
 		$Course = new Course();
-		// if the course is not registered or
-		// the course is registered but the block is not active
-		//if( !$Course->is_registered($course_id) or !$Course->uses_notifications_block($course_id) ) {
+
 		if( !$Course->is_registered($course_id) or !$Course->uses_notifications_block($course_id) ) {
 			echo get_string('rss_not_enabled', 'block_notifications');
 			return;
@@ -23,12 +22,13 @@ class RSS {
 		}
 
 		$course_info = $Course->get_course_info( $course_id );
-		//var_dump($course_info); exit;
+
 		$course_registration = $Course->get_registration( $course_id );
 
-		//print_r("here");
-		if ( $course_registration->notify_by_rss != 1 ) return;
-		// here
+		if ( $course_registration->notify_by_rss != 1 ){
+			return; // the rss is not active in the course
+		}
+
 		$now = date("D, d M Y H:i:s T");
 		$output = "<?xml version=\"1.0\"?>
 					<rss version=\"2.0\">
@@ -47,6 +47,7 @@ class RSS {
 		// get the last 20 entries form the block logs
 
 		$logs = $Course->get_logs( $course_id, 20 );
+		$events = report_eventlist_list_generator::get_all_events_list();
 
 		if( !isset($logs) or !is_array($logs) or count($logs) == 0 ) {
 			$output .= "<item>";
@@ -57,74 +58,15 @@ class RSS {
 			$separator = ' - ';
 			foreach( $logs as $log ) {
 				$output .= "<item>";
-				$output .= '<title>'.get_string($log->type, 'block_notifications').'</title>';
-				if ( preg_match('/^delete/', $log->action) ) {
+				$output .= '<title>'.get_string($log->module, 'block_notifications').': '.$log->name.'</title>';
+				if ( preg_match('/deleted/', $log->event) ) {
 					$output .= "<link></link>";
-				} else if(empty($log->url)){
-					$output .= "<link>$CFG->wwwroot/mod/$log->type/view.php?id=$log->module_id</link>";
 				} else {
-					$output .= "<link>$CFG->wwwroot/mod/$log->type/".htmlentities($log->url)."</link>";
+					$output .= "<link>".$this->extract_url($log)."</link>";
 				}
 
 				$output .= "<description>";
-				switch( $log->action ) {
-					case 'added':
-						$output .= get_string('added', 'block_notifications').$separator;
-						break;
-					case 'updated':
-						$output .= get_string('updated', 'block_notifications').$separator;
-						break;
-					case 'deleted':
-						$output .= get_string('deleted', 'block_notifications').$separator;
-						break;
-					case 'edited':
-						$output .= get_string('edited', 'block_notifications').$separator;
-						break;
-					case 'added_discussion':
-						$output .= get_string('added_discussion', 'block_notifications').$separator;
-						break;
-					case 'deleted_discussion':
-						$output .= get_string('deleted_discussion', 'block_notifications').$separator;
-						break;
-					case 'added_post':
-						$output .= get_string('added_post', 'block_notifications').$separator;
-						break;
-					case 'updated_post':
-						$output .= get_string('updated_post', 'block_notifications').$separator;
-						break;
-					case 'deleted_post':
-						$output .= get_string('deleted_post', 'block_notifications').$separator;
-						break;
-					case 'added_chapter':
-						$output .= get_string('added_chapter', 'block_notifications').$separator;
-						break;
-					case 'updated_chapter':
-						$output .= get_string('updated_chapter', 'block_notifications').$separator;
-						break;
-					case 'added_entry':
-						$output .= get_string('added_entry', 'block_notifications').$separator;
-						break;
-					case 'updated_entry':
-						$output .= get_string('updated_entry', 'block_notifications').$separator;
-						break;
-					case 'deleted_entry':
-						$output .= get_string('deleted_entry', 'block_notifications').$separator;
-						break;
-					case 'added_fields':
-						$output .= get_string('added_fields', 'block_notifications').$separator;
-						break;
-					case 'updated_fields':
-						$output .= get_string('updated_fields', 'block_notifications').$separator;
-						break;
-					case 'deleted_fields':
-						$output .= get_string('deleted_fields', 'block_notifications').$separator;
-						break;
-					case 'edited_questions':
-						$output .= get_string('edited_questions', 'block_notifications').$separator;
-						break;
-				}
-				$output .= get_string( $log->type, 'block_notifications' ).': ';
-				$output .= $log->name;
+				$output .= preg_replace('/\\\.*$/', '', $events[$log->event]['raweventname']) . ' on ' . date("D M j G:i:s T Y", $log->time_created);
 				$output .= "</description>";
 				$output .= "</item>";
 			}
@@ -132,6 +74,21 @@ class RSS {
 		$output .= "</channel></rss>";
 		header("Content-Type: application/rss+xml");
 		echo $output;
+	}
+
+	function extract_url($log_entry) {
+		global $CFG;
+
+		$url = "$CFG->wwwroot/mod/$log_entry->module/view.php?id=$log_entry->module_id";
+		switch($log_entry->target) {
+			case 'chapter':
+				$url .= "&chapterid=$log_entry->target_id";
+			break;
+			case 'calendar_event':
+				$url = "$CFG->wwwroot/calendar/view.php?course=$log_entry->course_id";
+			break;
+		}
+		return $url;
 	}
 }
 

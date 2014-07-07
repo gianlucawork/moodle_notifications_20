@@ -4,16 +4,9 @@
 //***************************************************
 
 class User {
-/*
-	function get_all_users_enrolled_in_the_course($course_id) {
-		$context = get_context_instance(CONTEXT_COURSE, $course_id);
-		$students = get_users_by_capability($context, 'mod/assignment:submit', 'u.id, u.firstname, u.lastname, u.email, u.mailformat');
-		return $students;
-	}
-*/
 	function get_all_users_enrolled_in_the_course( $course_id ) {
-		$context = get_context_instance( CONTEXT_COURSE, $course_id );
-		$all_users = get_users_by_capability( $context, 'mod/assignment:view', 'u.id, u.firstname, u.lastname, u.email, u.mailformat, u.phone2', 'lastname ASC, firstname DESC' );
+		$context = context_course::instance( $course_id );
+		$all_users = get_users_by_capability( $context, 'mod/assignment:view', 'u.id, u.firstname, u.lastname, u.email, u.mailformat, u.phone2, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename', 'lastname ASC, firstname DESC' );
 		$advanced_users = get_users_by_capability( $context, 'moodle/course:create', 'u.id', 'lastname ASC, firstname DESC' );
 		// filter advanced users: administrators
 		foreach( $advanced_users as $key => $value ) {
@@ -23,8 +16,8 @@ class User {
 	}
 
 	function get_professor( $course_id ) {
-		$context = get_context_instance( CONTEXT_COURSE, $course_id );
-		$users = get_users_by_capability( $context, 'moodle/course:managegroups', 'u.id, u.firstname, u.lastname, u.email, u.mailformat, u.phone2', 'lastname ASC, firstname DESC' );
+		$context = context_course::instance( $course_id );
+		$users = get_users_by_capability( $context, 'moodle/course:managegroups',  'u.id, u.firstname, u.lastname, u.email, u.mailformat, u.phone2, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename', 'lastname ASC, firstname DESC' );
 		$advanced_users = get_users_by_capability( $context, 'moodle/course:create', 'u.id', 'lastname ASC, firstname DESC' );
 		foreach( $advanced_users as $key => $value ) {
 			unset( $users[$key] );

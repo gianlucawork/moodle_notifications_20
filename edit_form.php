@@ -1,8 +1,12 @@
 <?php
+include_once LIB_DIR."SupportedEvents.php";
+
 class block_notifications_edit_form extends block_edit_form {
 	protected function specific_definition( $mform ) {
 		global $CFG;
 		global $COURSE;
+
+		$global_config = get_config('block_notifications');
 
 		$Course = new Course();
 		$course_notification_setting = $Course->get_registration( $COURSE->id );
@@ -13,7 +17,7 @@ class block_notifications_edit_form extends block_edit_form {
 		$attributes['disabled'] = 'disabled';
 		$attributes['group'] = 'notifications_settings';
 
-		if( $CFG->block_notifications_email_channel == 1 ) {
+		if( $global_config->email_channel == 1 ) {
 			$mform->addElement( 'checkbox', 'notify_by_email', get_string('notify_by_email', 'block_notifications') );
 		} else {
 			$mform->addElement( 'advcheckbox', 'notify_by_email', get_string('notify_by_email', 'block_notifications'), null, $attributes );
@@ -23,7 +27,7 @@ class block_notifications_edit_form extends block_edit_form {
 			$mform->setDefault( 'notify_by_email', 1 );
 		}
 
-		if( $CFG->block_notifications_sms_channel == 1 and class_exists('SMS') ) {
+		if( $global_config->sms_channel == 1 and class_exists('SMS') ) {
 			$mform->addElement( 'checkbox', 'notify_by_sms', get_string('notify_by_sms', 'block_notifications') );
 		} else {
 			$mform->addElement( 'advcheckbox', 'notify_by_sms', get_string('notify_by_sms', 'block_notifications'), null, $attributes );
@@ -33,7 +37,7 @@ class block_notifications_edit_form extends block_edit_form {
 			$mform->setDefault( 'notify_by_sms', 1 );
 		}
 
-		if( $CFG->block_notifications_rss_channel == 1 ) {
+		if( $global_config->rss_channel == 1 ) {
 			$mform->addElement( 'checkbox', 'notify_by_rss', get_string('notify_by_rss', 'block_notifications') );
 			$mform->addElement( 'checkbox', 'rss_shortname_url_param', get_string('rss_by_shortname', 'block_notifications') );
 		} else {
@@ -50,8 +54,8 @@ class block_notifications_edit_form extends block_edit_form {
 		}
 
 		if(
-			$CFG->block_notifications_email_channel == 1 or
-			$CFG->block_notifications_sms_channel == 1
+			$global_config->email_channel == 1 or
+			$global_config->sms_channel == 1
 		) {
 	 		$options = array();
 			for( $i=1; $i<25; ++$i ) {
@@ -78,360 +82,25 @@ class block_notifications_edit_form extends block_edit_form {
 			$mform->setDefault( 'sms_notification_preset', 0 );
 		}
 
-		$mform->addElement( 'html', '<div class="qheader" style="margin-top: 20px">'.get_string('actions_explanation', 'block_notifications').'</div>' );
+		$mform->addElement( 'html', '<div class="qheader" style="margin-top: 20px">'.get_string('events_explanation', 'block_notifications').'</div>' );
 
-		$mform->addElement( 'html',
-			'<style type="text/css">
-			<!--
-				.block_notifications_action_name {
-					font-weight: bold;
-				}
-			-->
-			</style>'
-		);
+		$events = report_eventlist_list_generator::get_all_events_list();
 
-		if( $CFG->block_notifications_action_added == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_added',
-								'<span class="block_notifications_action_name">' . get_string('added', 'block_notifications').'</span>'  .' : '. get_string('action_added_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_added',
-								'<span class="block_notifications_action_name">' . get_string('added', 'block_notifications').'</span>'  .' : '. get_string('action_added_explanation', 'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_added) and $course_notification_setting->action_added == 1 ) {
-			$mform->setDefault( 'action_added', 1 );
-		} else {
-			$mform->setDefault( 'action_added', 0 );
-		}
+		foreach(SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
+			$global_setting = preg_replace('/\\\/', '_', $platform_event_name);
+			$global_setting = preg_replace('/^_/', '', $global_setting);
+			$description = preg_replace('/href="/', 'href="../report/eventlist/', $events[$platform_event_name]['fulleventname']);
 
-
-		if( $CFG->block_notifications_action_updated == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_updated',
-								'<span class="block_notifications_action_name">' . get_string('updated', 'block_notifications').'</span>'  .' : '. get_string('action_updated_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_updated',
-								'<span class="block_notifications_action_name">' . get_string('updated', 'block_notifications').'</span>'  .' : '. get_string('action_updated_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_updated) and $course_notification_setting->action_updated == 1 ) {
-			$mform->setDefault( 'action_updated', 1 );
-		} else {
-			$mform->setDefault( 'action_updated', 0 );
-		}
-
-
-		if( $CFG->block_notifications_action_edited == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_edited',
-								'<span class="block_notifications_action_name">' . get_string('edited', 'block_notifications').'</span>'  .' : '. get_string('action_edited_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_edited',
-								'<span class="block_notifications_action_name">' . get_string('edited', 'block_notifications').'</span>'  .' : '. get_string('action_edited_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_edited) and $course_notification_setting->action_edited == 1 ) {
-			$mform->setDefault( 'action_edited', 1 );
-		} else {
-			$mform->setDefault( 'action_edited', 0 );
-		}
-
-
-		if( $CFG->block_notifications_action_deleted == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_deleted',
-								'<span class="block_notifications_action_name">' . get_string('deleted', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_deleted',
-								'<span class="block_notifications_action_name">' . get_string('deleted', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_deleted) and $course_notification_setting->action_deleted == 1 ) {
-			$mform->setDefault( 'action_deleted', 1 );
-		} else {
-			$mform->setDefault( 'action_deleted', 0 );
-		}
-
-		if( $CFG->block_notifications_action_added_discussion == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_added_discussion',
-								'<span class="block_notifications_action_name">' . get_string('added_discussion', 'block_notifications').'</span>'  .' : '. get_string('action_added_discussion_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_added_discussion',
-								'<span class="block_notifications_action_name">' . get_string('added_discussion', 'block_notifications').'</span>'  .' : '. get_string('action_added_discussion_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_added_discussion) and $course_notification_setting->action_added_discussion == 1 ) {
-			$mform->setDefault( 'action_added_discussion', 1 );
-		} else {
-			$mform->setDefault( 'action_added_discussion', 0 );
-		}
-
-		if( $CFG->block_notifications_action_deleted_discussion == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_deleted_discussion',
-								'<span class="block_notifications_action_name">' . get_string('deleted_discussion', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_discussion_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_deleted_discussion',
-								'<span class="block_notifications_action_name">' . get_string('deleted_discussion', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_discussion_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_deleted_discussion) and $course_notification_setting->action_deleted_discussion == 1 ) {
-			$mform->setDefault( 'action_deleted_discussion', 1 );
-		} else {
-			$mform->setDefault( 'action_deleted_discussion', 0 );
-		}
-
-		if( $CFG->block_notifications_action_added_post == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_added_post',
-								'<span class="block_notifications_action_name">' . get_string('added_post', 'block_notifications').'</span>'  .' : '. get_string('action_added_post_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_added_post',
-								'<span class="block_notifications_action_name">' . get_string('added_post', 'block_notifications').'</span>'  .' : '. get_string('action_added_post_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_added_post) and $course_notification_setting->action_added_post == 1 ) {
-			$mform->setDefault( 'action_added_post', 1 );
-		} else {
-			$mform->setDefault( 'action_added_post', 0 );
-		}
-
-		if( $CFG->block_notifications_action_updated_post == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_updated_post',
-								'<span class="block_notifications_action_name">' . get_string('updated_post', 'block_notifications').'</span>'  .' : '. get_string('action_updated_post_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_updated_post',
-								'<span class="block_notifications_action_name">' . get_string('updated_post', 'block_notifications').'</span>'  .' : '. get_string('action_updated_post_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_updated_post) and $course_notification_setting->action_updated_post == 1 ) {
-			$mform->setDefault( 'action_updated_post', 1 );
-		} else {
-			$mform->setDefault( 'action_updated_post', 0 );
-		}
-
-		if( $CFG->block_notifications_action_deleted_post == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_deleted_post',
-								'<span class="block_notifications_action_name">' . get_string('deleted_post', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_post_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_deleted_post',
-								'<span class="block_notifications_action_name">' . get_string('deleted_post', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_post_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_deleted_post) and $course_notification_setting->action_deleted_post == 1 ) {
-			$mform->setDefault( 'action_deleted_post', 1 );
-		} else {
-			$mform->setDefault( 'action_deleted_post', 0 );
-		}
-
-		if( $CFG->block_notifications_action_added_chapter == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_added_chapter',
-								'<span class="block_notifications_action_name">' . get_string('added_chapter', 'block_notifications').'</span>'  .' : '. get_string('action_added_chapter_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_added_chapter',
-								'<span class="block_notifications_action_name">' . get_string('added_chapter', 'block_notifications').'</span>'  .' : '. get_string('action_added_chapter_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_added_chapter) and $course_notification_setting->action_added_chapter == 1 ) {
-			$mform->setDefault( 'action_added_chapter', 1 );
-		} else {
-			$mform->setDefault( 'action_added_chapter', 0 );
-		}
-
-		if( $CFG->block_notifications_action_updated_chapter == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_updated_chapter',
-								'<span class="block_notifications_action_name">' . get_string('updated_chapter', 'block_notifications').'</span>'  .' : '. get_string('action_updated_chapter_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_updated_chapter',
-								'<span class="block_notifications_action_name">' . get_string('updated_chapter', 'block_notifications').'</span>'  .' : '. get_string('action_updated_chapter_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_updated_chapter) and $course_notification_setting->action_updated_chapter == 1 ) {
-			$mform->setDefault( 'action_updated_chapter', 1 );
-		} else {
-			$mform->setDefault( 'action_updated_chapter', 0 );
-		}
-
-		if( $CFG->block_notifications_action_added_entry == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_added_entry',
-								'<span class="block_notifications_action_name">' . get_string('added_entry', 'block_notifications').'</span>'  .' : '. get_string('action_added_entry_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_added_entry',
-								'<span class="block_notifications_action_name">' . get_string('added_entry', 'block_notifications').'</span>'  .' : '. get_string('action_added_entry_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_added_entry) and $course_notification_setting->action_added_entry == 1 ) {
-			$mform->setDefault( 'action_added_entry', 1 );
-		} else {
-			$mform->setDefault( 'action_added_entry', 0 );
-		}
-
-		if( $CFG->block_notifications_action_updated_entry == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_updated_entry',
-								'<span class="block_notifications_action_name">' . get_string('updated_entry', 'block_notifications').'</span>'  .' : '. get_string('action_updated_entry_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_updated_entry',
-								'<span class="block_notifications_action_name">' . get_string('updated_entry', 'block_notifications').'</span>'  .' : '. get_string('action_updated_entry_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_updated_entry) and $course_notification_setting->action_updated_entry == 1 ) {
-			$mform->setDefault( 'action_updated_entry', 1 );
-		} else {
-			$mform->setDefault( 'action_updated_entry', 0 );
-		}
-
-		if( $CFG->block_notifications_action_deleted_entry == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_deleted_entry',
-								'<span class="block_notifications_action_name">' . get_string('deleted_entry', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_entry_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_deleted_entry',
-								'<span class="block_notifications_action_name">' . get_string('deleted_entry', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_entry_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_deleted_entry) and $course_notification_setting->action_deleted_entry == 1 ) {
-			$mform->setDefault( 'action_deleted_entry', 1 );
-		} else {
-			$mform->setDefault( 'action_deleted_entry', 0 );
-		}
-
-		if( $CFG->block_notifications_action_added_fields == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_added_fields',
-								'<span class="block_notifications_action_name">' . get_string('added_fields', 'block_notifications').'</span>'  .' : '. get_string('action_added_fields_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_added_fields',
-								'<span class="block_notifications_action_name">' . get_string('added_fields', 'block_notifications').'</span>'  .' : '. get_string('action_added_fields_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_added_fields) and $course_notification_setting->action_added_fields == 1 ) {
-			$mform->setDefault( 'action_added_fields', 1 );
-		} else {
-			$mform->setDefault( 'action_added_fields', 0 );
-		}
-
-		if( $CFG->block_notifications_action_updated_fields == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_updated_fields',
-								'<span class="block_notifications_action_name">' . get_string('updated_fields', 'block_notifications').'</span>'  .' : '. get_string('action_updated_fields_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_updated_fields',
-								'<span class="block_notifications_action_name">' . get_string('updated_fields', 'block_notifications').'</span>'  .' : '. get_string('action_updated_fields_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_updated_fields) and $course_notification_setting->action_updated_fields == 1 ) {
-			$mform->setDefault( 'action_updated_fields', 1 );
-		} else {
-			$mform->setDefault( 'action_updated_fields', 0 );
-		}
-
-		if( $CFG->block_notifications_action_deleted_fields == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_deleted_fields',
-								'<span class="block_notifications_action_name">' . get_string('deleted_fields', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_fields_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_deleted_fields',
-								'<span class="block_notifications_action_name">' . get_string('deleted_fields', 'block_notifications').'</span>'  .' : '. get_string('action_deleted_fields_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_deleted_fields) and $course_notification_setting->action_deleted_fields == 1 ) {
-			$mform->setDefault( 'action_deleted_fields', 1 );
-		} else {
-			$mform->setDefault( 'action_deleted_fields', 0 );
-		}
-
-		if( $CFG->block_notifications_action_edited_questions == 1 ) {
-			$mform->addElement( 'checkbox',
-								'action_edited_questions',
-								'<span class="block_notifications_action_name">' . get_string('edited_questions', 'block_notifications').'</span>'  .' : '. get_string('action_edited_questions_explanation',
-								'block_notifications') );
-		} else {
-			$mform->addElement( 'checkbox',
-								'action_edited_questions',
-								'<span class="block_notifications_action_name">' . get_string('edited_questions', 'block_notifications').'</span>'  .' : '. get_string('action_edited_questions_explanation',
-								'block_notifications'),
-								null,
-								$attributes );
-		}
-		if ( isset($course_notification_setting->action_edited_questions) and $course_notification_setting->action_edited_questions == 1 ) {
-			$mform->setDefault( 'action_edited_questions', 1 );
-		} else {
-			$mform->setDefault( 'action_edited_questions', 0 );
+			if( $global_config->$global_setting == 1 ) {
+				$mform->addElement( 'checkbox', $block_instance_setting, $description );
+			} else {
+				$mform->addElement( 'checkbox', $block_instance_setting, $description, null, $attributes );
+			}
+			if ( isset($course_notification_setting->$block_instance_setting) and $course_notification_setting->$block_instance_setting == 1 ) {
+				$mform->setDefault( $block_instance_setting, 1 );
+			} else {
+				$mform->setDefault( $block_instance_setting, 0 );
+			}
 		}
 	}
 
@@ -444,24 +113,9 @@ class block_notifications_edit_form extends block_edit_form {
 		$block_config->notification_frequency = file_get_submitted_draft_itemid( 'notification_frequency' );
 		$block_config->email_notification_preset = file_get_submitted_draft_itemid( 'email_notification_preset' );
 		$block_config->sms_notification_preset = file_get_submitted_draft_itemid( 'sms_notification_preset' );
-		$block_config->action_added = file_get_submitted_draft_itemid( 'action_added' );
-		$block_config->action_updated = file_get_submitted_draft_itemid( 'action_updated' );
-		$block_config->action_edited = file_get_submitted_draft_itemid( 'action_edited' );
-		$block_config->action_deleted = file_get_submitted_draft_itemid( 'action_deleted' );
-		$block_config->action_added_discussion = file_get_submitted_draft_itemid( 'action_added_discussion' );
-		$block_config->action_deleted_discussion = file_get_submitted_draft_itemid( 'action_deleted_discussion' );
-		$block_config->action_added_post = file_get_submitted_draft_itemid( 'action_added_post' );
-		$block_config->action_updated_post = file_get_submitted_draft_itemid( 'action_updated_post' );
-		$block_config->action_deleted_post = file_get_submitted_draft_itemid( 'action_deleted_post' );
-		$block_config->action_added_chapter = file_get_submitted_draft_itemid( 'action_added_chapter' );
-		$block_config->action_updated_chapter = file_get_submitted_draft_itemid( 'action_updated_chapter' );
-		$block_config->action_added_entry = file_get_submitted_draft_itemid( 'action_added_entry' );
-		$block_config->action_updated_entry = file_get_submitted_draft_itemid( 'action_updated_entry' );
-		$block_config->action_deleted_entry = file_get_submitted_draft_itemid( 'action_deleted_entry' );
-		$block_config->action_added_fields = file_get_submitted_draft_itemid( 'action_added_fields' );
-		$block_config->action_updated_fields = file_get_submitted_draft_itemid( 'action_updated_fields' );
-		$block_config->action_deleted_fields = file_get_submitted_draft_itemid( 'action_deleted_fields' );
-		$block_config->action_edited_questions = file_get_submitted_draft_itemid( 'action_edited_questions' );
+		foreach(SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
+			$block_config->$block_instance_setting = file_get_submitted_draft_itemid( $block_instance_setting );
+		}
 		unset( $this->block->config->text );
 		parent::set_data( $defaults );
 		$this->block->config = $block_config;

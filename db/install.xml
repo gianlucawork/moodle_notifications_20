@@ -1,65 +1,88 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/notifications/db" VERSION="20140407" COMMENT="XMLDB file for Moodle blocks/notifications"
+<XMLDB PATH="blocks/notifications/db" VERSION="20140707" COMMENT="XMLDB file for Moodle blocks/notifications"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="block_notifications_courses" COMMENT="Courses table" NEXT="block_notifications_log">
+    <TABLE NAME="block_notifications_courses" COMMENT="Courses table">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course_id"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The course identificator" PREVIOUS="id" NEXT="last_notification_time"/>
-        <FIELD NAME="last_notification_time" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The last time the notification has been sent" PREVIOUS="course_id" NEXT="notify_by_email"/>
-        <FIELD NAME="notify_by_email" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables notification by email" PREVIOUS="last_notification_time" NEXT="notify_by_sms"/>
-        <FIELD NAME="notify_by_sms" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables notification by sms" PREVIOUS="notify_by_email" NEXT="notify_by_rss"/>
-        <FIELD NAME="notify_by_rss" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables RSS notification" PREVIOUS="notify_by_sms" NEXT="rss_shortname_url_param"/>
-        <FIELD NAME="rss_shortname_url_param" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Sets the shortname as the parameter in the RSS url" PREVIOUS="notify_by_rss" NEXT="notification_frequency"/>
-        <FIELD NAME="notification_frequency" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="43200" SEQUENCE="false" PREVIOUS="rss_shortname_url_param" NEXT="email_notification_preset"/>
-        <FIELD NAME="email_notification_preset" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="User preset for the email notification channel" PREVIOUS="notification_frequency" NEXT="sms_notification_preset"/>
-        <FIELD NAME="sms_notification_preset" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="User preset for the email notification channel" PREVIOUS="email_notification_preset" NEXT="action_added"/>
-        <FIELD NAME="action_added" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a module is added" PREVIOUS="sms_notification_preset" NEXT="action_updated"/>
-        <FIELD NAME="action_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a module is updated" PREVIOUS="action_added" NEXT="action_edited"/>
-        <FIELD NAME="action_edited" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when modules such as Page and Assignment are added" PREVIOUS="action_updated" NEXT="action_deleted"/>
-        <FIELD NAME="action_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a module is deleted from a course" PREVIOUS="action_edited" NEXT="action_added_discussion"/>
-        <FIELD NAME="action_added_discussion" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify a new when a new discussion is added to the forum" PREVIOUS="action_deleted" NEXT="action_updated_discussion"/>
-        <FIELD NAME="action_updated_discussion" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a forum discussion is updated" PREVIOUS="action_added_discussion" NEXT="action_deleted_discussion"/>
-        <FIELD NAME="action_deleted_discussion" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a forum discussion is deleted" PREVIOUS="action_updated_discussion" NEXT="action_added_post"/>
-        <FIELD NAME="action_added_post" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Notify when a post is added to a discussion" PREVIOUS="action_deleted_discussion" NEXT="action_updated_post"/>
-        <FIELD NAME="action_updated_post" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Notify when a post has been updated" PREVIOUS="action_added_post" NEXT="action_deleted_post"/>
-        <FIELD NAME="action_deleted_post" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Notify when a post has been deleted" PREVIOUS="action_updated_post" NEXT="action_added_chapter"/>
-        <FIELD NAME="action_added_chapter" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a new chapter has been added to a book" PREVIOUS="action_deleted_post" NEXT="action_updated_chapter"/>
-        <FIELD NAME="action_updated_chapter" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a chapter of the book is updated" PREVIOUS="action_added_chapter" NEXT="action_added_entry"/>
-        <FIELD NAME="action_added_entry" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when a new entry is added to the glossary" PREVIOUS="action_updated_chapter" NEXT="action_added_fields"/>
-        <FIELD NAME="action_added_fields" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Notify when new fields are added to a database activity" PREVIOUS="action_added_entry" NEXT="action_updated_fields"/>
-        <FIELD NAME="action_updated_fields" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Notify when the fields of the database activity are updated" PREVIOUS="action_added_fields" NEXT="action_deleted_fields"/>
-        <FIELD NAME="action_deleted_fields" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Notify when fields are cancelled from the database activity" PREVIOUS="action_updated_fields" NEXT="action_edited_question"/>
-        <FIELD NAME="action_edited_question" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify when the quiz questions have been added or modified" PREVIOUS="action_deleted_fields"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The course identificator"/>
+        <FIELD NAME="last_notification_time" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="The last time the notification has been sent"/>
+        <FIELD NAME="notify_by_email" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables notification by email"/>
+        <FIELD NAME="notify_by_sms" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables notification by sms"/>
+        <FIELD NAME="notify_by_rss" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables RSS notification"/>
+        <FIELD NAME="rss_shortname_url_param" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Sets the shortname as the parameter in the RSS url"/>
+        <FIELD NAME="notification_frequency" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="43200" SEQUENCE="false"/>
+        <FIELD NAME="email_notification_preset" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="User preset for the email notification channel"/>
+        <FIELD NAME="sms_notification_preset" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="User preset for the email notification channel"/>
+        <FIELD NAME="calendar_event_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\calendar_event_created"/>
+        <FIELD NAME="calendar_event_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\calendar_event_deleted"/>
+        <FIELD NAME="calendar_event_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\calendar_event_updated"/>
+        <FIELD NAME="course_module_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\course_module_created"/>
+        <FIELD NAME="course_module_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\course_module_deleted"/>
+        <FIELD NAME="course_module_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\course_module_updated"/>
+        <FIELD NAME="chapter_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_book\event\chapter_created"/>
+        <FIELD NAME="chapter_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_book\event\chapter_deleted"/>
+        <FIELD NAME="chapter_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_book\event\chapter_updated"/>
+        <FIELD NAME="field_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\field_created"/>
+        <FIELD NAME="field_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\field_deleted"/>
+        <FIELD NAME="field_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\field_updated"/>
+        <FIELD NAME="record_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\record_created"/>
+        <FIELD NAME="record_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\record_deleted"/>
+        <FIELD NAME="record_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\record_updated"/>
+        <FIELD NAME="template_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\template_updated"/>
+        <FIELD NAME="folder_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_folder\event\folder_updated"/>
+        <FIELD NAME="discussion_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\discussion_deleted"/>
+        <FIELD NAME="discussion_moved" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\discussion_moved"/>
+        <FIELD NAME="discussion_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\discussion_updated"/>
+        <FIELD NAME="post_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\post_created"/>
+        <FIELD NAME="post_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\post_deleted"/>
+        <FIELD NAME="post_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\post_updated"/>
+        <FIELD NAME="category_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\category_created"/>
+        <FIELD NAME="category_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\category_deleted"/>
+        <FIELD NAME="category_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\category_updated"/>
+        <FIELD NAME="glossary_comment_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\comment_created"/>
+        <FIELD NAME="glossary_comment_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\comment_deleted"/>
+        <FIELD NAME="entry_approved" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\entry_approved"/>
+        <FIELD NAME="entry_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\entry_created"/>
+        <FIELD NAME="entry_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_glossary\event\entry_deleted"/>
+        <FIELD NAME="entry_disapproved" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="\mod_glossary\event\entry_disapproved"/>
+        <FIELD NAME="entry_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="\mod_glossary\event\entry_updated"/>
+        <FIELD NAME="wiki_comment_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_wiki\event\comment_created"/>
+        <FIELD NAME="wiki_comment_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_wiki\event\comment_deleted"/>
+        <FIELD NAME="page_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_wiki\event\page_created"/>
+        <FIELD NAME="page_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="\mod_wiki\event\page_deleted"/>
+        <FIELD NAME="page_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="\mod_wiki\event\page_updated"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="block_notifications_log" COMMENT="block_notifications_log table retrofitted from MySQL" PREVIOUS="block_notifications_courses" NEXT="block_notifications_users">
+    <TABLE NAME="block_notifications_log" COMMENT="block_notifications_log table retrofitted from MySQL">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course_id"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="module_id"/>
-        <FIELD NAME="module_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="course_id" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="module_id" NEXT="type"/>
-        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="resource" SEQUENCE="false" PREVIOUS="name" NEXT="url"/>
-        <FIELD NAME="url" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="The resource/activity specific url" PREVIOUS="type" NEXT="action"/>
-        <FIELD NAME="action" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="added" SEQUENCE="false" PREVIOUS="url" NEXT="status"/>
-        <FIELD NAME="status" TYPE="char" LENGTH="8" NOTNULL="true" DEFAULT="notified" SEQUENCE="false" PREVIOUS="action"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="event" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="added" SEQUENCE="false"/>
+        <FIELD NAME="module" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="resource" SEQUENCE="false"/>
+        <FIELD NAME="module_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="target" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="The target name"/>
+        <FIELD NAME="target_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Target id reference"/>
+        <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time of the log creation"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Notification status: 0 - pending 1- notified"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="block_notifications_users" COMMENT="This table contains user preferences" PREVIOUS="block_notifications_log">
+    <TABLE NAME="block_notifications_users" COMMENT="This table contains user preferences">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="user_id"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="User id" PREVIOUS="id" NEXT="course_id"/>
-        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Course id" PREVIOUS="user_id" NEXT="notify_by_email"/>
-        <FIELD NAME="notify_by_email" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables mail notification. 1-enabled 0-disabled" PREVIOUS="course_id" NEXT="notify_by_sms"/>
-        <FIELD NAME="notify_by_sms" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables sms notification. 1-enabled 0-disabled" PREVIOUS="notify_by_email"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="User id"/>
+        <FIELD NAME="course_id" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Course id"/>
+        <FIELD NAME="notify_by_email" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables mail notification. 1-enabled 0-disabled"/>
+        <FIELD NAME="notify_by_sms" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables sms notification. 1-enabled 0-disabled"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

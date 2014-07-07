@@ -31,46 +31,10 @@ $string['notification_frequency_comment'] = 'Il controllo di nuovi contenuti nei
 $string['mailsubject'] = 'Aggiornamenti sul corso';
 $string['user_preference_settings'] = 'Impostazioni personali';
 $string['user_preference_header'] = 'Abilita o disablita i canali di notifica preferiti';
-// ACTION LABELS
-$string['global_actions_explanation'] = 'Impostazione globale sulla notifica di azioni sul corso. Le azioni selezionate di sotto saranno notificate agli utenti. Sarà possibile disabilitarle al livello del corso. Se disabilitate qui saranno disabilitate in tutti i corsi';
-$string['action_added_explanation'] = 'Notifica quando un modulo (risorsa o attivit&agrave;) viene aggiunto al corso.';
-$string['action_updated_explanation'] = 'Notifica quando un modulo (risorsa o attivit&agrave;) viene modificato.';
-$string['action_edited_explanation'] = 'Notifica quando il contenuto di alcuni moduli, come il Wiki e Compito, viene modificato';
-$string['action_deleted_explanation'] = 'Notifica quando un modulo (risorsa o attivit&agrave;) viene cancellato.';
-$string['action_added_discussion_explanation'] = 'Notifica quando una nuova discussione viene aggiunta ad un forum';
-$string['action_deleted_discussion_explanation'] = 'Notifica quando una discussione viene cancellata';
-$string['action_added_post_explanation'] = 'Notifica quando un nuovo post viene aggiunta ad una discussione';
-$string['action_updated_post_explanation'] = 'Notifica quando un post viene aggiornato';
-$string['action_deleted_post_explanation'] = 'Notifica quando un post viene cancellato';
-$string['action_added_chapter_explanation'] = 'Notifica quando un nuovo capitolo viene aggiunta ad un libro';
-$string['action_updated_chapter_explanation'] = 'Notifica quando un capitolo viene aggiornato';
-$string['action_added_entry_explanation'] = 'Notifica quando un nuovo voce viene aggiunta ad un glossario';
-$string['action_updated_entry_explanation'] = 'Notifica quando una voce del glossario viene aggiornata';
-$string['action_deleted_entry_explanation'] = 'Notifica quando una voce del glossario viene cancellata';
-$string['action_added_fields_explanation'] = 'Notifica quando un nuovo campo viene aggiunta ad una bancadatai';
-$string['action_updated_fields_explanation'] = 'Notifica quando un campo nella bancadati viene aggiornato';
-$string['action_deleted_fields_explanation'] = 'Notifica quando un campo nella bancadati viene cancellato';
-$string['action_edited_questions_explanation'] = 'Notifica quando le domande di un quiz vengono modificate';
-// ACTIONS
-$string['added'] = 'Aggiunto';
-$string['updated'] = 'Aggiornato';
-$string['edited'] = 'Modificato';
-$string['deleted'] = 'Rimosso';
-$string['added_discussion'] = 'Nuova discussione';
-$string['updated_discussion'] = 'Discussion aggiornata';
-$string['deleted_discussion'] = 'Discussion cancellata';
-$string['added_post'] = 'Nuovo post';
-$string['updated_post'] = 'Post aggiornato';
-$string['deleted_post'] = 'Post cancellato';
-$string['added_chapter'] = 'Nuovo capitolo';
-$string['updated_chapter'] = 'Aggiornato capitolo';
-$string['added_entry'] = 'Nuova voce';
-$string['updated_entry'] = 'Voce aggiornata';
-$string['deleted_entry'] = 'Voce cancellata';
-$string['added_fields'] = 'Nuovi campi';
-$string['updated_fields'] = 'Campi aggiornati';
-$string['deleted_fields'] = 'Campi rimossi';
-$string['edited_questions'] = 'Modificato Domande';
+// EVENT LABELS
+$string['global_events_explanation'] = 'Impostazione globale sulla notifica degli eventi nel corso. Gli eventi selezionati saranno notificati agli utenti. Sarà possibile disabilitare la notifica al livello del corso. Se disabilitate qui le notifiche saranno disabilitate in tutti i corsi che usano il blocco notifiche.';
+$string['events_explanation'] = 'Eventi notificati all\' utente.';
+
 // MODULES
 $string['assign'] = 'Compito';
 $string['assignment'] = 'Compito';
@@ -94,6 +58,7 @@ $string['workshop'] = 'Workshop';
 $string['quizport'] = 'Quizport';
 $string['checklist'] = 'Checklist';
 $string['book'] = 'Libro';
+
 // HELP 
 $string['help_title'] = 'Impostare il numero di celluare';
 $string['set_mobile_number_instructions'] = "Andare sulla pagina del corso e cliccare sul proprio nome nell'angolo in alto a destra. Scegliere la voce Modifica. Scorrere la pagina fino in fondo e immettere il proprio numero di cellulare nel campo Cellulare. Cliccare su Aggiornamento Profilo per salvare.";
