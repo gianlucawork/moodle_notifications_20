@@ -1,4 +1,19 @@
 ==================================================================================================
+Upgrade to 2.0
+==================================================================================================
+The 2.0 version is not retro compatible. Only Moodle 2.7 and higher are supported because these
+of the new logging system. To upgrade to Notificatins 2.0 please follow these steps:
+
+1. Uninstall the old Notifications plugin
+2. Upgrade the Notifications plugin code by using git or by copying the 2.0 code under
+   MOODLE_ROOT/block/notifications
+3. Click on Notifications inside the Site Administration menu
+4. Follow the instructions and complete the procedure
+
+WARNING !! : Please understand that this procedure is going to remove the Notifications block from
+             all your courses. Your teachers will have to add the block again to their courses.
+
+==================================================================================================
 Upgrade from 1.3.x to 1.4
 ==================================================================================================
 The upgrade from 1.3.x to 1.4 should be managed by the db/upgrade.php file for the LAMP stacks.
