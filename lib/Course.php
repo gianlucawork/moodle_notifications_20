@@ -377,7 +377,7 @@ class Course {
 
 		return current( $DB->get_records_sql("select name from {$CFG->prefix}block_notifications_log where course_id = $course_id
 												 and module = '$module' and module_id = $module_id and target = '$target'
-												 and target_id = $target_id and name != '' order by id desc") );
+												 and target_id = $target_id and name != '' order by id desc limit 1") );
 	}
 
 	function fill_in_deleted_modules_names( $course_id ) {

@@ -82,7 +82,7 @@ class RSS {
 		$url = "$CFG->wwwroot/mod/$log_entry->module/view.php?id=$log_entry->module_id";
 		switch($log_entry->target) {
 			case 'chapter':
-				$url .= "&chapterid=$log_entry->target_id";
+				$url .= "&amp;chapterid=$log_entry->target_id";
 			break;
 			case 'calendar_event':
 				$url = "$CFG->wwwroot/calendar/view.php?course=$log_entry->course_id";
