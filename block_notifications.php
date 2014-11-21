@@ -1,11 +1,18 @@
 <?php
+//***************************************************
+// Cron Note
+//***************************************************
+// this block is registered as task.
+// it does not implement the cron() function anymore.
+// please check the classes/task/notify.php file for
+// more details.
+//***************************************************
+
+
 include_once realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR."common.php";
-include_once LIB_DIR."User.php";
-include_once LIB_DIR."Course.php";
-include_once LIB_DIR."eMail.php";
-if(file_exists(LIB_DIR."SMS.php")) {
-	include_once LIB_DIR."SMS.php";
-}
+
+use block_notifications\Course;
+use block_notifications\User;
 
 class block_notifications extends block_base {
 
@@ -165,7 +172,6 @@ class block_notifications extends block_base {
 				$this->content->text.= "<img src='$CFG->wwwroot/blocks/notifications/images/Mail-icon.png' ";
 				$this->content->text.= "alt='e-mail icon' ";
 				$this->content->text.= "title='".get_string('email_icon_tooltip', 'block_notifications')." ";
-				$this->content->text.= $course_registration->notification_frequency / 3600 . " ".get_string('end_of_tooltip', 'block_notifications')."' />";
 				//$this->content->text.= '<br />';
 			}
 
@@ -181,15 +187,14 @@ class block_notifications extends block_base {
 					$this->content->text.= "<img src='$CFG->wwwroot/blocks/notifications/images/SMS-icon.png' ";
 					$this->content->text.= "alt='sms icon' ";
 					$this->content->text.= "title='".get_string('sms_icon_tooltip', 'block_notifications')." ";
-					$this->content->text.= $course_registration->notification_frequency / 3600 . " ".get_string('end_of_tooltip', 'block_notifications')."' />";
 				}
 				//$this->content->text.= '<br />';
 			}
 			if ( $global_config->rss_channel == 1 and $course_registration->notify_by_rss == 1 ) {
 				if ( isset($course_registration->rss_shortname_url_param) and $course_registration->rss_shortname_url_param == 1 ) {
-					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/lib/RSS.php?shortname=$COURSE->shortname'>";
+					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/clases/RSS.php?shortname=$COURSE->shortname'>";
 				} else {
-					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/lib/RSS.php?id=$COURSE->id'>";
+					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/classes/RSS.php?id=$COURSE->id'>";
 				}
 				$this->content->text.= "<img src='$CFG->wwwroot/blocks/notifications/images/RSS-icon.png' ";
 				$this->content->text.= "alt='rss icon' ";
@@ -203,121 +208,5 @@ class block_notifications extends block_base {
 		$this->content->footer = '';
 		return $this->content;
 	}
-
-//***************************************************
-// Cron
-//***************************************************
-
-function cron() {
-		global $CFG;
-		echo '<pre>';
-		echo "\n\n****** notifications :: begin ******";
-		$User = new User();
-		// clean deleted users data
-		$User->collect_garbage();
-
-		$Course = new Course();
-		// clean deleted courses data
-		$Course->collect_garbage();
-
-		// get the list of courses that are using this block
-		$courses = $Course->get_all_courses_using_notifications_block();
-		
-		// if no courses are using this block exit
-		if( !is_array($courses) or count($courses) < 1 ) {
-			echo "\n--> None course is using notifications plugin.";
-			echo "\n****** notifications :: end ******\n\n";
-			return;
-		}
-
-		$global_config = get_config('block_notifications');
-
-		foreach($courses as $course) {
-			// if course is not visible then skip
-			if ( $course->visible == 0 ) { continue; }
-
-			// if the course has not been registered so far then register
-			echo "\n--> Processing course: $course->fullname";
-			if( !$Course->is_registered($course->id) ) {
-				$Course->register($course->id, time());
-			}
-
-			// check notification frequency for this course
-			$course_registration = $Course->get_registration($course->id);
-			// initialize user preferences and check for new enrolled users in this course
-			$enrolled_users = $User->get_all_users_enrolled_in_the_course($course->id);
-
-			foreach($enrolled_users as $user) {
-				// check if the user has preferences
-				$user_preferences = $User->get_preferences($user->id, $course->id);
-				// if the user has not preferences than set the default
-				if(is_null($user_preferences)) {
-					$user_preferences = new Object();
-					$user_preferences->user_id = $user->id;
-					$user_preferences->course_id = $course->id;
-					$user_preferences->notify_by_email = $course_registration->email_notification_preset;
-					$user_preferences->notify_by_sms = $course_registration->sms_notification_preset;
-					$User->initialize_preferences(	$user_preferences->user_id,
-													$user_preferences->course_id,
-													$user_preferences->notify_by_email,
-													$user_preferences->notify_by_sms );
-				}
-			}
-
-			// if course log entry does not exist
-			// or the last notification time is older than two days
-			// then reinitialize course log
-			if( !$Course->log_exists($course->id) or $course_registration->last_notification_time + 48*3600 < time() ) {
-				$Course->initialize_log($course->id);
-			}
-
-			// check notification frequency for the course and skip to next cron cycle if neccessary
-
-			if( $course_registration->last_notification_time + $course_registration->notification_frequency > time() ){
-				echo " - Skipping to next cron cycle.";
-				continue;
-			}
-
-			$Course->update_log($course->id);
-
-			// check if the course has something new or not
-			$changelist = $Course->get_recent_activities($course->id);
-
-			// update the last notification time
-			$Course->update_last_notification_time($course->id, time());
-
-			if( empty($changelist) ) { continue; } // check the next course. No new items in this one.
-
-
-			foreach($enrolled_users as $user) {
-				// get user preferences
-				$user_preferences = $User->get_preferences($user->id, $course->id);
-				// if the email notification is enabled in the course
-				// and if the user has set the emailing notification in preferences
-				// then send a notification by email
-				if( $global_config->email_channel == 1 and $course_registration->notify_by_email == 1 and $user_preferences->notify_by_email == 1 ) {
-					$eMail = new eMail();
-					$eMail->notify($changelist, $user, $course);
-				}
-				// if the sms notification is enabled in the course
-				// and if the user has set the sms notification in preferences
-				// and if the user has set the mobile phone number
-				// then send a notification by sms
-				if(
-					class_exists('SMS') and
-					$global_config->sms_channel == 1 and
-					$course_registration->notify_by_sms == 1 and
-					$user_preferences->notify_by_sms == 1 and
-					!empty($user->phone2)
-				) {
-					$sms = new SMS();
-					$sms->notify($changelist, $user, $course);
-				}
-			}
-		}
-		echo "\n****** notifications :: end ******\n\n";
-		echo '</pre>';
-	}
-
 }
 ?>

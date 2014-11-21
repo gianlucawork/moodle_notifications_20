@@ -1,7 +1,10 @@
 <?php
+namespace block_notifications;
+
 include_once realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."common.php";
-include_once LIB_DIR."Course.php";
-include_once LIB_DIR."User.php";
+
+use report_eventlist_list_generator;
+
 
 class RSS {
 	function __construct( $course_id ){
@@ -17,7 +20,7 @@ class RSS {
 		$teacher = $User->get_professor( $course_id );
 		// if no teacher then add a dummy mail address
 		if( empty($teacher) ) {
-            $teacher = new stdClass();
+            $teacher = new \stdClass();
 			$teacher->email = "noteacher@inthiscourse.org";
 		}
 

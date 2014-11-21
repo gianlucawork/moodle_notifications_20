@@ -1,4 +1,5 @@
 <?php
+namespace block_notifications;
 
 //***************************************************
 // SMS notification abstract class

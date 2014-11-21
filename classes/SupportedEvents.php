@@ -1,6 +1,8 @@
 <?php
+namespace block_notifications;
+
 //***************************************************
-// User class
+// SupportedEvents class
 //***************************************************
 
 class SupportedEvents {

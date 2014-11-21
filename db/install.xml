@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/notifications/db" VERSION="20140707" COMMENT="XMLDB file for Moodle blocks/notifications"
+<XMLDB PATH="blocks/notifications/db" VERSION="20141121" COMMENT="XMLDB file for Moodle blocks/notifications"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -12,10 +12,10 @@
         <FIELD NAME="notify_by_email" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables notification by email"/>
         <FIELD NAME="notify_by_sms" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables notification by sms"/>
         <FIELD NAME="notify_by_rss" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Enables RSS notification"/>
-        <FIELD NAME="rss_shortname_url_param" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Sets the shortname as the parameter in the RSS url"/>
-        <FIELD NAME="notification_frequency" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="43200" SEQUENCE="false"/>
         <FIELD NAME="email_notification_preset" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="User preset for the email notification channel"/>
         <FIELD NAME="sms_notification_preset" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="User preset for the email notification channel"/>
+        <FIELD NAME="rss_shortname_url_param" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Sets the shortname as the parameter in the RSS url"/>
+        <FIELD NAME="history_length" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="30" SEQUENCE="false" COMMENT="This is the lenght of the history. Default is 30"/>
         <FIELD NAME="calendar_event_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\calendar_event_created"/>
         <FIELD NAME="calendar_event_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\calendar_event_deleted"/>
         <FIELD NAME="calendar_event_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \core\event\calendar_event_updated"/>
@@ -70,11 +70,15 @@
         <FIELD NAME="target" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="The target name"/>
         <FIELD NAME="target_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Target id reference"/>
         <FIELD NAME="time_created" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time of the log creation"/>
+        <FIELD NAME="other" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Other info related to the event"/>
         <FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Notification status: 0 - pending 1- notified"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="course_id" UNIQUE="false" FIELDS="course_id" COMMENT="Course id index for the log table"/>
+      </INDEXES>
     </TABLE>
     <TABLE NAME="block_notifications_users" COMMENT="This table contains user preferences">
       <FIELDS>

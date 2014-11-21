@@ -1,4 +1,8 @@
 <?php
+namespace block_notifications;
+
+use report_eventlist_list_generator;
+
 //***************************************************
 // Mail notification
 //***************************************************
@@ -9,7 +13,9 @@ class eMail {
 		$text_message = $this->text_mail( $changelist, $course );
 		$subject = get_string('mailsubject', 'block_notifications');
 		$subject.= ": ".format_string( $course->fullname, true );
-		email_to_user( $user, '', $subject, $text_message, $html_message );
+		print_r("\nemail to: $user\n\n");
+		print_r("\nmail: $html_message\n\n");
+		//email_to_user( $user, '', $subject, $text_message, $html_message );
 	}
 
 

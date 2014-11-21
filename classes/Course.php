@@ -1,8 +1,11 @@
 <?php
+namespace block_notifications;
+
+use Object;
+
 //***************************************************
 // Course registration management
 //***************************************************
-include_once LIB_DIR."SupportedEvents.php";
 
 class Course {
 
@@ -72,12 +75,6 @@ class Course {
 			$course->rss_shortname_url_param = 0;
 		}
 
-		if( isset($CFG->block_notifications_frequency) ) {
-			$course->notification_frequency = $CFG->block_notifications_frequency * 3600;
-		} else {
-			$course->notification_frequency = 12 * 3600;
-		}
-
 		if ( isset($CFG->block_notifications_email_notification_preset) ) {
 			$course->email_notification_preset = $CFG->block_notifications_email_notification_preset;
 		} else {
@@ -110,7 +107,6 @@ class Course {
 		$course = $settings;
 		$course->id = $this->get_registration_id( $course_id );
 		$course->course_id = $course_id;
-		$course->notification_frequency = $settings->notification_frequency % 25 * 3600;
 		return $DB->update_record('block_notifications_courses', $course);
 	}
 
@@ -215,7 +211,7 @@ class Course {
 	}
 
 	function initialize_log( $course_id ){
-		$this->populate_log($course_id, 0, 1);
+		$this->populate_log($course_id, time(), 1);
 	}
 
 	function populate_log( $course, $time, $status ){
@@ -228,6 +224,12 @@ class Course {
 		}
 		// add new records
 		foreach( $logs as $log) {
+			// ignore admin activities
+			if($this->is_admin($log->get_data()['userid'])) {
+				continue;
+			}
+			//print_r("\n\nlog::::::::::::::::\n\n");
+			//print_r($log);
 			// filter invisible modules
 			$skip_module = false;
 			$new_record = new Object();
@@ -238,6 +240,7 @@ class Course {
 				break;
 
 				case '\core\event\calendar_event_updated':
+					// check if the previous calendar_event data has been updated
 					$new_record->module = $log->get_data()['target'];
 					$new_record->name = $log->get_data()['other']['name'];
 				break;
@@ -250,6 +253,7 @@ class Course {
 				default:
 					// try to get the module from the course
 					try {
+						echo '<pre>';
 						$module = $modinfo->get_cm($log->get_data()['contextinstanceid']);
 						// check if the module is visible.
 						// avoid logging invisible modules.
@@ -298,7 +302,11 @@ class Course {
 			$new_record->target = $log->get_data()['target'];
 			$new_record->target_id = $log->get_data()['objectid'];
 			$new_record->time_created = $log->get_data()['timecreated'];
+			$new_record->other = json_encode($log->get_data()['other']);
 			$new_record->status = $status;
+
+			//print_r("inserting::::::::::::::\n\n");
+			//print_r($new_record);
 
 			$DB->insert_record( 'block_notifications_log', $new_record );
 		}
@@ -315,6 +323,18 @@ class Course {
 		} else {
 			return true;
 		}
+	}
+
+	function is_admin($userid){
+		$admins = get_admins();
+		$isadmin = false;
+		foreach($admins as $admin) {
+			if ($userid == $admin->id) {
+				$isadmin = true;
+				break;
+			}
+		}
+		return $isadmin;
 	}
 
 	function log_exists( $course_id ){
@@ -396,11 +416,19 @@ class Course {
 	// purge entries of courses that have been deleted
 	function collect_garbage(){
 		global $CFG, $DB;
+		$global_config = get_config('block_notifications');
 
 		$complete_course_list = "(select id from {$CFG->prefix}course)";
 		// remove entries of courses that have been deleted
 		$DB->execute( "delete from {$CFG->prefix}block_notifications_log where course_id not in $complete_course_list" );
 		$DB->execute( "delete from {$CFG->prefix}block_notifications_courses where course_id not in $complete_course_list" );
+
+		// prune the older entries; check the global setting: history_length
+		$course_ids = $DB->get_records_sql("select course_id from {$CFG->prefix}block_notifications_courses");
+		foreach($course_ids as $entry) {
+			$id = current($entry);
+			$DB->execute("delete from mdl_block_notifications_log where time_created < (select min(time_created) as time_limit from (select * from mdl_block_notifications_log where course_id = $id and status = 1 order by id desc limit $global_config->history_length) kept_history) and course_id = $id and status = 1");
+		}
 	}
 
 }

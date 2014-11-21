@@ -1,6 +1,7 @@
 <?php
-include_once LIB_DIR."SupportedEvents.php";
-
+/////////////////////////////////////////////////////
+// COURSE SETTINGS
+////////////////////////////////////////////////////
 class block_notifications_edit_form extends block_edit_form {
 	protected function specific_definition( $mform ) {
 		global $CFG;
@@ -8,7 +9,7 @@ class block_notifications_edit_form extends block_edit_form {
 
 		$global_config = get_config('block_notifications');
 
-		$Course = new Course();
+		$Course = new \block_notifications\Course();
 		$course_notification_setting = $Course->get_registration( $COURSE->id );
 		// Fields for editing HTML block title and contents.
 		$mform->addElement( 'header', 'configheader', get_string( 'blocksettings', 'block' ) );
@@ -53,19 +54,6 @@ class block_notifications_edit_form extends block_edit_form {
 			$mform->setDefault( 'rss_shortname_url_param', 1 );
 		}
 
-		if(
-			$global_config->email_channel == 1 or
-			$global_config->sms_channel == 1
-		) {
-	 		$options = array();
-			for( $i=1; $i<25; ++$i ) {
-				$options[$i] = $i;
-			}
-			$mform->addElement( 'select', 'notification_frequency', get_string('notification_frequency', 'block_notifications'), $options );
-			$mform->setDefault( 'notification_frequency', $course_notification_setting->notification_frequency/3600 );
-		}
-
-
 		$mform->addElement( 'html', '<div class="qheader" style="margin-top: 20px">'.get_string('course_configuration_presets_comment', 'block_notifications').'</div>' );
 
 		$mform->addElement( 'checkbox', 'email_notification_preset', get_string('email_notification_preset', 'block_notifications') );
@@ -86,7 +74,7 @@ class block_notifications_edit_form extends block_edit_form {
 
 		$events = report_eventlist_list_generator::get_all_events_list();
 
-		foreach(SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
+		foreach(\block_notifications\SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
 			$global_setting = preg_replace('/\\\/', '_', $platform_event_name);
 			$global_setting = preg_replace('/^_/', '', $global_setting);
 			$description = preg_replace('/href="/', 'href="../report/eventlist/', $events[$platform_event_name]['fulleventname']);
@@ -110,10 +98,9 @@ class block_notifications_edit_form extends block_edit_form {
 		$block_config->notify_by_sms = file_get_submitted_draft_itemid( 'notify_by_sms' );
 		$block_config->notify_by_rss = file_get_submitted_draft_itemid( 'notify_by_rss' );
 		$block_config->rss_shortname_url_param = file_get_submitted_draft_itemid( 'rss_shortname_url_param' );
-		$block_config->notification_frequency = file_get_submitted_draft_itemid( 'notification_frequency' );
 		$block_config->email_notification_preset = file_get_submitted_draft_itemid( 'email_notification_preset' );
 		$block_config->sms_notification_preset = file_get_submitted_draft_itemid( 'sms_notification_preset' );
-		foreach(SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
+		foreach(\block_notifications\SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
 			$block_config->$block_instance_setting = file_get_submitted_draft_itemid( $block_instance_setting );
 		}
 		unset( $this->block->config->text );

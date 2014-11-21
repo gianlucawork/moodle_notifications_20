@@ -1,4 +1,10 @@
 <?php
+namespace block_notifications;
+
+use Object;
+use context_course;
+use report_eventlist_list_generator;
+
 //***************************************************
 // User class
 //***************************************************

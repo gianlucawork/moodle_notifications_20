@@ -1,8 +1,15 @@
 ==================================================================================================
+Upgrade to 2.1
+==================================================================================================
+Starting from this version the notification mechanism runs as a task and not as a cron anymore.
+Previous moodle versions that don't have the task support are not supported anymore.
+For older moodle installations that don't support tasks please use the 2.0 version of this block.
+
+==================================================================================================
 Upgrade to 2.0
 ==================================================================================================
-The 2.0 version is not retro compatible. Only Moodle 2.7 and higher are supported because these
-of the new logging system. To upgrade to Notificatins 2.0 please follow these steps:
+The 2.0 version is not retro compatible. Only Moodle 2.7 and higher are supported due
+to the new logging system. To upgrade to Notificatins 2.0 please follow these steps:
 
 1. Uninstall the old Notifications plugin
 2. Upgrade the Notifications plugin code by using git or by copying the 2.0 code under

@@ -1,6 +1,8 @@
 <?php 
 include_once realpath( dirname( __FILE__ ).DIRECTORY_SEPARATOR ).DIRECTORY_SEPARATOR."common.php";
-include_once LIB_DIR.DIRECTORY_SEPARATOR."User.php";
+
+use block_notifications\User;
+
 // print_r($_POST);exit;
 // check email preference
 $notify_by_email = 0;
