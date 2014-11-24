@@ -10,7 +10,10 @@ class RSS {
 	function __construct( $course_id ){
 		global $CFG, $DB;
 
+		$global_config = get_config('block_notifications');
+
 		$Course = new Course();
+
 
 		if( !$Course->is_registered($course_id) or !$Course->uses_notifications_block($course_id) ) {
 			echo get_string('rss_not_enabled', 'block_notifications');
@@ -49,7 +52,7 @@ class RSS {
 
 		// get the last 20 entries form the block logs
 
-		$logs = $Course->get_logs( $course_id, 20 );
+		$logs = $Course->get_logs( $course_id, $global_config->history_length );
 		$events = report_eventlist_list_generator::get_all_events_list();
 
 		if( !isset($logs) or !is_array($logs) or count($logs) == 0 ) {
