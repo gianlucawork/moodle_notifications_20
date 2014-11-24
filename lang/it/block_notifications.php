@@ -35,7 +35,7 @@ $string['user_preference_header'] = 'Abilita o disablita i canali di notifica pr
 $string['global_events_explanation'] = 'Impostazione globale sulla notifica degli eventi nel corso. Gli eventi selezionati saranno notificati agli utenti. Sarà possibile disabilitare la notifica al livello del corso. Se disabilitate qui le notifiche saranno disabilitate in tutti i corsi che usano il blocco notifiche.';
 $string['events_explanation'] = 'Eventi notificati all\' utente.';
 
-// MODULES
+// MODULES AND TARGETS
 $string['assign'] = 'Compito';
 $string['assignment'] = 'Compito';
 $string['chat'] = 'Chat';
@@ -58,6 +58,10 @@ $string['workshop'] = 'Workshop';
 $string['quizport'] = 'Quizport';
 $string['checklist'] = 'Checklist';
 $string['book'] = 'Libro';
+$string['calendar_event'] = 'Evento Calendario';
+$string['course_module'] = 'Modulo';
+$string['chapter'] = 'Capitolo';
+$string['label'] = 'Etichetta';
 
 // HELP 
 $string['help_title'] = 'Impostare il numero di celluare';

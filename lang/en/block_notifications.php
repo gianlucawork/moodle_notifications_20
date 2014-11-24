@@ -63,6 +63,7 @@ $string['book'] = 'Book';
 $string['calendar_event'] = 'Calendar event';
 $string['course_module'] = 'Module';
 $string['chapter'] = 'Chapter';
+$string['label'] = 'Label';
 
 // HELP
 $string['help_title'] = 'Set your mobile number';

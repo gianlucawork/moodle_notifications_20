@@ -36,12 +36,14 @@ class RSS {
 		}
 
 		$now = date("D, d M Y H:i:s T");
+		$course_name = strip_tags($course_info->fullname);
+		$course_summary = strip_tags($course_info->summary);
 		$output = "<?xml version=\"1.0\"?>
 					<rss version=\"2.0\">
 					<channel>
-					<title>$course_info->fullname</title>
+					<title>$course_name</title>
 					<link>$CFG->wwwroot/course/view.php?id=$course_id</link>
-					<description>$course_info->summary</description>
+					<description>$course_summary</description>
 					<language>en-us</language>
 					<pubDate>$now</pubDate>
 					<lastBuildDate>$now</lastBuildDate>
