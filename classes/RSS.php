@@ -24,6 +24,8 @@ class RSS {
 		// if no teacher then add a dummy mail address
 		if( empty($teacher) ) {
             $teacher = new \stdClass();
+			$teacher->firstname = "No";
+			$teacher->lastname = "Teacher";
 			$teacher->email = "noteacher@inthiscourse.org";
 		}
 
@@ -35,9 +37,9 @@ class RSS {
 			return; // the rss is not active in the course
 		}
 
-		$now = date("D, d M Y H:i:s T");
-		$course_name = strip_tags($course_info->fullname);
-		$course_summary = strip_tags($course_info->summary);
+		$now = date('r');
+		$course_name = $this->standardize($course_info->fullname);
+		$course_summary = $this->standardize($course_info->summary);
 		$output = "<?xml version=\"1.0\"?>
 					<rss version=\"2.0\">
 					<channel>
@@ -48,11 +50,9 @@ class RSS {
 					<pubDate>$now</pubDate>
 					<lastBuildDate>$now</lastBuildDate>
 					<docs>$CFG->wwwroot/course/view.php?id=$course_id</docs>
-					<managingEditor>$teacher->email</managingEditor>
-					<webMaster>helpdesk@elearninglab.org</webMaster>";
+					<managingEditor>$teacher->email ($teacher->firstname $teacher->lastname)</managingEditor>
+					<webMaster>helpdesk@elearninglab.org (Helpdesk eLab)</webMaster>";
 
-
-		// get the last 20 entries form the block logs
 
 		$logs = $Course->get_logs( $course_id, $global_config->history_length );
 		$events = report_eventlist_list_generator::get_all_events_list();
@@ -66,7 +66,7 @@ class RSS {
 			$separator = ' - ';
 			foreach( $logs as $log ) {
 				$output .= "<item>";
-				$output .= '<title>'.get_string($log->module, 'block_notifications').': '.$log->name.'</title>';
+				$output .= '<title>'.get_string($log->module, 'block_notifications').': ' . $this->standardize($log->name) . '</title>';
 				if ( preg_match('/deleted/', $log->event) ) {
 					$output .= "<link></link>";
 				} else {
@@ -74,7 +74,7 @@ class RSS {
 				}
 
 				$output .= "<description>";
-				$output .= preg_replace('/\\\.*$/', '', $events[$log->event]['raweventname']) . ' on ' . date("D M j G:i:s T Y", $log->time_created);
+				$output .= $this->standardize(preg_replace('/\\\.*$/', '', $events[$log->event]['raweventname']) . ' on ' . date("r", $log->time_created));
 				$output .= "</description>";
 				$output .= "</item>";
 			}
@@ -97,6 +97,12 @@ class RSS {
 			break;
 		}
 		return $url;
+	}
+
+	function standardize($string) {
+		$output = strip_tags($string);
+		$output = htmlentities($output);
+		return $output;
 	}
 }
 
