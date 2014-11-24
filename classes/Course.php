@@ -16,30 +16,30 @@ class Course {
 	}
 
 	function dump($var) {
-		print_r('<pre>');
+		print_r("\n<pre>");
 		if(is_array($var)) {
-			print_r('<br />******************************************************');
-			print_r('<br />* ARRAY');
-			print_r('<br />******************************************************');
-			print_r('<br />');
+			print_r("\n<br />******************************************************");
+			print_r("\n<br />* ARRAY");
+			print_r("\n<br />******************************************************");
+			print_r("\n<br />");
 			foreach($var as $key => $content) {
-				print_r('<br />----------------<br />');
-				print_r('KEY: '. $key);
-				print_r('<br />----------------<br />');
-				print_r('CONTENT:');
-				print_r('<br />================================================<br />');
+				print_r("\n<br />----------------<br />\n");
+				print_r("\nKEY: ". $key);
+				print_r("\n<br />----------------<br />\n");
+				print_r("\nCONTENT:");
+				print_r("\n<br />================================================<br />\n");
 				print_r($content);
-				print_r('<br />================================================<br />');
+				print_r("\n<br />================================================<br />\n");
 			}
 		} else {
-			print_r('<br />******************************************************');
-			print_r('<br />* OBJECT');
-			print_r('<br />******************************************************');
-			print_r('<br />================================================<br />');
+			print_r("\n<br />******************************************************");
+			print_r("\n<br />* OBJECT");
+			print_r("\n<br />******************************************************");
+			print_r("\n<br />================================================<br />\n");
 			print_r($var);
-			print_r('<br />================================================<br />');
+			print_r("\n<br />================================================<br />\n");
 		}
-		print_r('</pre>');
+		print_r("\n</pre>");
 	}
 
 	function register( $course_id, $starting_time ) {
@@ -253,7 +253,6 @@ class Course {
 				default:
 					// try to get the module from the course
 					try {
-						echo '<pre>';
 						$module = $modinfo->get_cm($log->get_data()['contextinstanceid']);
 						// check if the module is visible.
 						// avoid logging invisible modules.
