@@ -171,7 +171,7 @@ class block_notifications extends block_base {
 			if ( $global_config->email_channel == 1 and $course_registration->notify_by_email == 1 ) {
 				$this->content->text.= "<img src='$CFG->wwwroot/blocks/notifications/images/Mail-icon.png' ";
 				$this->content->text.= "alt='e-mail icon' ";
-				$this->content->text.= "title='".get_string('email_icon_tooltip', 'block_notifications')." />";
+				$this->content->text.= "title='".get_string('email_icon_tooltip', 'block_notifications')."' />";
 				//$this->content->text.= '<br />';
 			}
 
@@ -186,7 +186,7 @@ class block_notifications extends block_base {
 				} else {
 					$this->content->text.= "<img src='$CFG->wwwroot/blocks/notifications/images/SMS-icon.png' ";
 					$this->content->text.= "alt='sms icon' ";
-					$this->content->text.= "title='".get_string('sms_icon_tooltip', 'block_notifications')." />";
+					$this->content->text.= "title='".get_string('sms_icon_tooltip', 'block_notifications')."' />";
 				}
 				//$this->content->text.= '<br />';
 			}
