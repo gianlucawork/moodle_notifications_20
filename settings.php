@@ -14,7 +14,7 @@ if ( $ADMIN->fulltree ) {
 	$settings->add( new admin_setting_heading('block_notifications_settings', '', get_string('global_configuration_comment', 'block_notifications')) );
 	$settings->add( new admin_setting_configcheckbox('block_notifications/email_channel', get_string('email', 'block_notifications'), '', 1) );
 
-	if( class_exists('SMS') ) {
+	if( class_exists('block_notifications\SMS') ) {
 		$settings->add( new admin_setting_configcheckbox('block_notifications/sms_channel', get_string('sms', 'block_notifications'), '', 1) );
 	} else {
 		$settings->add( new admin_setting_configcheckbox('block_notifications/sms_channel', get_string('sms', 'block_notifications'),  get_string('sms_class_not_implemented', 'block_notifications'), 0) );

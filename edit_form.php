@@ -28,7 +28,7 @@ class block_notifications_edit_form extends block_edit_form {
 			$mform->setDefault( 'notify_by_email', 1 );
 		}
 
-		if( $global_config->sms_channel == 1 and class_exists('SMS') ) {
+		if( $global_config->sms_channel == 1 and class_exists('block_notifications\SMS') ) {
 			$mform->addElement( 'checkbox', 'notify_by_sms', get_string('notify_by_sms', 'block_notifications') );
 		} else {
 			$mform->addElement( 'advcheckbox', 'notify_by_sms', get_string('notify_by_sms', 'block_notifications'), null, $attributes );

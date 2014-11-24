@@ -102,7 +102,7 @@ class notify extends \core\task\scheduled_task {
 				// and if the user has set the mobile phone number
 				// then send a notification by sms
 				if(
-					class_exists('SMS') and
+					class_exists('block_notifications\SMS') and
 					$global_config->sms_channel == 1 and
 					$course_registration->notify_by_sms == 1 and
 					$user_preferences->notify_by_sms == 1 and

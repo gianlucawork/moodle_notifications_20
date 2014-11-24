@@ -120,7 +120,7 @@ class block_notifications extends block_base {
 				$up_interface.= get_string('notify_by_email', 'block_notifications');
 				$up_interface.='</div>'; // div c end
 			}
-			if ( class_exists('SMS') and $global_config->sms_channel == 1 and $course_registration->notify_by_sms == 1 ) {
+			if ( class_exists('block_notifications\SMS') and $global_config->sms_channel == 1 and $course_registration->notify_by_sms == 1 ) {
 				$up_interface.='<div>'; // div d end
 				$up_interface.="<input type='checkbox' name='notify_by_sms' value='1' $sms_notification_status />";
 				$up_interface.= get_string('notify_by_sms', 'block_notifications');
@@ -175,7 +175,7 @@ class block_notifications extends block_base {
 				//$this->content->text.= '<br />';
 			}
 
-			if ( $global_config->sms_channel == 1 and $course_registration->notify_by_sms == 1 and class_exists('SMS') ) {
+			if ( $global_config->sms_channel == 1 and $course_registration->notify_by_sms == 1 and class_exists('block_notifications\SMS') ) {
 				if( empty($USER->phone2) ) {
 					//$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/help.php?module=plugin&file=../blocks/notifications/lang/en_utf8/help/prova.html'>";
 					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/help.php'>";
