@@ -192,7 +192,7 @@ class block_notifications extends block_base {
 			}
 			if ( $global_config->rss_channel == 1 and $course_registration->notify_by_rss == 1 ) {
 				if ( isset($course_registration->rss_shortname_url_param) and $course_registration->rss_shortname_url_param == 1 ) {
-					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/clases/RSS.php?shortname=$COURSE->shortname'>";
+					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/classes/RSS.php?shortname=$COURSE->shortname'>";
 				} else {
 					$this->content->text.= "<a target='_blank' href='$CFG->wwwroot/blocks/notifications/classes/RSS.php?id=$COURSE->id'>";
 				}
