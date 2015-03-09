@@ -36,6 +36,7 @@ class notify extends \core\task\scheduled_task {
 
 		$global_config = get_config('block_notifications');
 
+		echo "\n\nNumber of courses using the block: ".count($courses);
 		foreach($courses as $course) {
 			// if course is not visible then skip
 			if ( $course->visible == 0 ) { continue; }

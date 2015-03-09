@@ -250,6 +250,11 @@ class Course {
 					$new_record->name = $log->get_data()['other']['name'];
 				break;
 
+				case '\core\event\course_module_deleted':
+					$new_record->name = '';
+					$new_record->module = $log->get_data()['other']['modulename'];
+				break;
+
 				default:
 					// try to get the module from the course
 					try {

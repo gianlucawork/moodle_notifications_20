@@ -14,6 +14,7 @@ class eMail {
 		$text_message = $this->text_mail( $changelist, $course );
 		$subject = get_string('mailsubject', 'block_notifications');
 		$subject.= ": ".format_string( $course->fullname, true );
+		//$this->test_email_to_user( $user, $admin, $subject, $text_message, $html_message );
 		email_to_user( $user, $admin, $subject, $text_message, $html_message );
 	}
 
@@ -85,6 +86,15 @@ class eMail {
 			break;
 		}
 		return $url;
+	}
+
+	function test_email_to_user( $user, $admin, $subject, $text_message, $html_message ) {
+		echo "\n--------------------------------------------------------\n";
+		echo "-->to: $user->email \n";
+		echo ">>>subject $subject\n";
+		echo "===\n $text_message\n";
+		echo "===\n";
+		echo "\n--------------------------------------------------------\n";
 	}
 }
 ?>
