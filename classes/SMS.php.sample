@@ -1,5 +1,6 @@
 <?php
-require_once LIB_DIR.DIRECTORY_SEPARATOR."AbstractSMS.php";
+namespace block_notifications;
+
 //***************************************************
 // SMS notification abstract class
 //***************************************************
@@ -10,9 +11,10 @@ class SMS extends AbstractSMS {
 		global $CFG;
 		$charmax = 160;
 
+		$events = report_eventlist_list_generator::get_all_events_list();
+		$smsbody = '';
 		foreach ( $changelist as $item ) {
-			$smsbody .= get_string( $item->action, 'block_notifications' ).'-';
-			$smsbody .= get_string( $item->type, 'block_notifications' ).": ";
+			$smsbody .= preg_replace('/\\\.*$/', '', $events[$item->event]['raweventname']).': ';
 			$smsbody .= $item->name."\r\n";
 		}
 		return $smsbody;
@@ -30,7 +32,6 @@ class SMS extends AbstractSMS {
 		$to = str_replace( '+', '00', $to );
 		$subject = substr( $course->shortname, 0, $course_shortname_limit );
 		$smsmessage = $this->message( $changelist, $course );
-		//echo $smsmessage;
 
 		// if the sms message is longer than 160 chars then cut and put ... at the end of the message
 		$message_length = strlen( $from . $subject_overhead . $subject . $smsmessage );
@@ -59,16 +60,13 @@ class SMS extends AbstractSMS {
         $mail->Body = $smsmessage;
         $mail->IsHTML( false );
 
-		if ( $mail->Send() ) {
+		if ( !$mail->Send() ) {
 			$mail->IsSMTP(); // use SMTP directly
 			if ( !empty($mail->SMTPDebug) ) {
-				echo '</pre>';
-				echo 'mail spedita';
+				echo 'mail sent';
 			}
 		} else {
-			if ( !empty($mail->SMTPDebug) ) {
-				echo '</pre>';
-			}
+			if ( !empty($mail->SMTPDebug) ) { }
 			//Send Error
 			return $mail->ErrorInfo;
 		}
