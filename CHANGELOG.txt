@@ -1,6 +1,32 @@
-==========================================================================================	
+==========================================================================================
+	Version - 2.2
+==========================================================================================
+Bugfixes:
+- Deleted modules used to break the notifications process.
+==========================================================================================
+	Version - 2.1
+==========================================================================================
+Bugfixes:
+- The eMail sending was disabled during debug.
+- Warn the admin users when sending emails is not possibile.
+- RSS compliancy improved. Use only the RSS approved characters.
+- Apply the history length constraint on the RSS.
+- Unclosed tags and some missing html attributes.
+
+==========================================================================================
+	Version - 2.0
+==========================================================================================
+
+The block uses the new loggin mechanism introduced in Moodle 2.6.
+
+This version breaks the compatibilty with the previous ones.
+
+For older moodle versions please use the notifications 1.4.
+
+
+==========================================================================================
 	Version - 1.4 Extended the notified actions on the course
-==========================================================================================	
+==========================================================================================
 
 Extended the range of the notified actions. Here is the complete list:
 
@@ -25,9 +51,9 @@ Extended the range of the notified actions. Here is the complete list:
 
 Please check the UPGRADE.txt file for more information.
 
-==========================================================================================	
+==========================================================================================
 	Version - 1.3.x Presets + Bugfixes
-==========================================================================================	
+==========================================================================================
 
 Added user presets for channel preferences
     
@@ -59,9 +85,9 @@ BUGFIXES:
 		treated as new and is notified through available channels.
 
 
-==========================================================================================	
+==========================================================================================
 	Version 1.2; merge BUGFIX; documentation updated
-==========================================================================================	
+==========================================================================================
 
 BUGFIX:
 - The Italian translation was missing in the last merge.
@@ -85,9 +111,9 @@ THANKS:
 - to Nicolas Dunand for contribution.  https://github.com/ndunand/
 
 
-==========================================================================================	
+==========================================================================================
 	Several bugfixes for new version: 1.0.3
-==========================================================================================	
+==========================================================================================
 	
 Bugfix: Courses without teachers have broken RSS
 	--
