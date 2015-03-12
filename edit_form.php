@@ -12,7 +12,7 @@ class block_notifications_edit_form extends block_edit_form {
 		$Course = new \block_notifications\Course();
 		$course_notification_setting = $Course->get_registration( $COURSE->id );
 		// Fields for editing HTML block title and contents.
-		$mform->addElement( 'header', 'configheader', get_string( 'blocksettings', 'block' ) );
+		$mform->addElement( 'header', 'notificationsheader', get_string( 'blocksettings', 'block' ) );
 
 		$attributes = array();
 		$attributes['disabled'] = 'disabled';
@@ -70,7 +70,7 @@ class block_notifications_edit_form extends block_edit_form {
 			$mform->setDefault( 'sms_notification_preset', 0 );
 		}
 
-		$mform->addElement( 'html', '<div class="qheader" style="margin-top: 20px">'.get_string('events_explanation', 'block_notifications').'</div>' );
+		$mform->addElement( 'html', '<div class="qheader" style="margin-top: 20px;">'.get_string('events_explanation', 'block_notifications').'</div>' );
 
 		$events = report_eventlist_list_generator::get_all_events_list();
 
@@ -81,12 +81,13 @@ class block_notifications_edit_form extends block_edit_form {
 
 			if( $global_config->$global_setting == 1 ) {
 				$mform->addElement( 'checkbox', $block_instance_setting, $description );
+				if ( isset($course_notification_setting->$block_instance_setting) and $course_notification_setting->$block_instance_setting == 1 ) {
+					$mform->setDefault( $block_instance_setting, 1 );
+				} else {
+					$mform->setDefault( $block_instance_setting, 0 );
+				}
 			} else {
 				$mform->addElement( 'checkbox', $block_instance_setting, $description, null, $attributes );
-			}
-			if ( isset($course_notification_setting->$block_instance_setting) and $course_notification_setting->$block_instance_setting == 1 ) {
-				$mform->setDefault( $block_instance_setting, 1 );
-			} else {
 				$mform->setDefault( $block_instance_setting, 0 );
 			}
 		}
