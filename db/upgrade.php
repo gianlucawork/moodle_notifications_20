@@ -81,6 +81,18 @@ function xmldb_block_notifications_upgrade($oldversion, $block) {
 		upgrade_block_savepoint(true, 2014112100, 'notifications');
 	}
 
+	if ($oldversion < 2015052800) {
+        $coursestable = new xmldb_table('block_notifications_courses');
+        $discussion_created_field = new xmldb_field('discussion_created', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'folder_updated');
+		// Conditionally launch add field history_length.
+		if (!$dbman->field_exists($coursestable, $discussion_created_field)) {
+			$dbman->add_field($coursestable, $discussion_created_field);
+		}
+
+		// Notifications savepoint reached.
+		upgrade_block_savepoint(true, 2015052800, 'notifications');
+	}
+
     return true;
 }
 

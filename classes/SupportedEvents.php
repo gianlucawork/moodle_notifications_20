@@ -27,6 +27,7 @@ class SupportedEvents {
 			'record_updated' => '\mod_data\event\record_updated',
 			'template_updated' => '\mod_data\event\template_updated',
 			'folder_updated' => '\mod_folder\event\folder_updated',
+			'discussion_created' => '\mod_forum\event\discussion_created',
 			'discussion_deleted' => '\mod_forum\event\discussion_deleted',
 			'discussion_moved' => '\mod_forum\event\discussion_moved',
 			'discussion_updated' => '\mod_forum\event\discussion_updated',

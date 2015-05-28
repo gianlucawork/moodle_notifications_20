@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/notifications/db" VERSION="20141121" COMMENT="XMLDB file for Moodle blocks/notifications"
+<XMLDB PATH="blocks/notifications/db" VERSION="20150528" COMMENT="XMLDB file for Moodle blocks/notifications"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -33,6 +33,7 @@
         <FIELD NAME="record_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\record_updated"/>
         <FIELD NAME="template_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_data\event\template_updated"/>
         <FIELD NAME="folder_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_folder\event\folder_updated"/>
+        <FIELD NAME="discussion_created" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\discussion_created"/>
         <FIELD NAME="discussion_deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\discussion_deleted"/>
         <FIELD NAME="discussion_moved" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\discussion_moved"/>
         <FIELD NAME="discussion_updated" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Notify: \mod_forum\event\discussion_updated"/>
