@@ -19,7 +19,7 @@ class SMS. Check lib/SMS.php.sample if you need a starting
 point.
 
 The admin actions on the course are not reported. They are
-considered maintainance.
+considered maintenance.
 
 Installation:
 To install please perform the following steps:
