@@ -18,6 +18,9 @@ channel please extend lib/AbstractSMS.php class. Call the new
 class SMS. Check lib/SMS.php.sample if you need a starting
 point.
 
+The admin actions on the course are not reported. They are
+considered maintainance.
+
 Installation:
 To install please perform the following steps:
 	
