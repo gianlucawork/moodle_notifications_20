@@ -113,7 +113,7 @@ if( empty($_GET['id']) and empty($_GET['shortname'])) {
 	die("Please specify the Course id or the Course shortname as url options.");
 } else if(empty($_GET['id']) and !empty($_GET['shortname'])) {
 	global $DB, $CFG;
-	$course = $DB->get_record('course', array('shortname' => $_GET['shortname']), $fields='id');
+	$course = $DB->get_record('course', array('shortname' => urldecode($_GET['shortname'])), $fields='id');
 	if($course == false) {
 		die("A course with this shortname does not exist. Please specify the correct shortname.");
 	} else {
