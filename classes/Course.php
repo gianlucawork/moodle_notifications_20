@@ -431,7 +431,7 @@ class Course {
 		$course_ids = $DB->get_records_sql("select course_id from {$CFG->prefix}block_notifications_courses");
 		foreach($course_ids as $entry) {
 			$id = current($entry);
-			$DB->execute("delete from mdl_block_notifications_log where time_created < (select min(time_created) as time_limit from (select * from mdl_block_notifications_log where course_id = $id and status = 1 order by id desc limit $global_config->history_length) kept_history) and course_id = $id and status = 1");
+			$DB->execute("delete from {$CFG->prefix}block_notifications_log where time_created < (select min(time_created) as time_limit from (select * from {$CFG->prefix}block_notifications_log where course_id = $id and status = 1 order by id desc limit $global_config->history_length) kept_history) and course_id = $id and status = 1");
 		}
 	}
 
