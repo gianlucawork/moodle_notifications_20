@@ -258,7 +258,12 @@ class Course {
 				default:
 					// try to get the module from the course
 					try {
-						$module = $modinfo->get_cm($log->get_data()['contextinstanceid']);
+						$module = null;
+						if( empty($modinfo->cms[$log->get_data()['contextinstanceid']]) ) {
+							continue;
+						} else {
+							$module = $modinfo->get_cm($log->get_data()['contextinstanceid']);
+						}
 						// check if the module is visible.
 						// avoid logging invisible modules.
 						if(
