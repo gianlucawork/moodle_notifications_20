@@ -16,7 +16,6 @@ class eMail {
 		} else {
 			$sender = $CFG->supportemail;
 		}
-		$sender = current(get_admins());
 		$html_message = $this->html_mail( $changelist, $course );
 		$text_message = $this->text_mail( $changelist, $course );
 		$subject = get_string('mailsubject', 'block_notifications');
