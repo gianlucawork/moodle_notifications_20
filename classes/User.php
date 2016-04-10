@@ -12,11 +12,17 @@ use report_eventlist_list_generator;
 class User {
 	function get_all_users_enrolled_in_the_course( $course_id ) {
 		$context = context_course::instance( $course_id );
-		$all_users = get_users_by_capability( $context, 'mod/assignment:view', 'u.id, u.firstname, u.lastname, u.email, u.mailformat, u.phone2, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename', 'lastname ASC, firstname DESC' );
+		$all_users = get_users_by_capability( $context, 'mod/assignment:view', 'u.id, u.firstname, u.lastname, u.email, u.suspended, u.mailformat, u.phone2, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename', 'lastname ASC, firstname DESC' );
 		$advanced_users = get_users_by_capability( $context, 'moodle/course:create', 'u.id', 'lastname ASC, firstname DESC' );
 		// filter advanced users: administrators
 		foreach( $advanced_users as $key => $value ) {
 			unset( $all_users[$key] );
+		}
+		// filter suspended users
+		foreach( $all_users as $key => $value ) {
+			if($value->suspended != 0) {
+				unset( $all_users[$key] );
+			}
 		}
 		return $all_users;
 	}

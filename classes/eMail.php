@@ -9,13 +9,19 @@ use report_eventlist_list_generator;
 class eMail {
 
 	function notify( $changelist, $user, $course ){
-		$admin = current(get_admins());
+		global $CFG;
+		$sender = 'noreplay@moodle.com';
+		if(empty($CFG->supportemail)) {
+			$sender = current(get_admins());
+		} else {
+			$sender = $CFG->supportemail;
+		}
 		$html_message = $this->html_mail( $changelist, $course );
 		$text_message = $this->text_mail( $changelist, $course );
 		$subject = get_string('mailsubject', 'block_notifications');
 		$subject.= ": ".format_string( $course->fullname, true );
-		//$this->test_email_to_user( $user, $admin, $subject, $text_message, $html_message );
-		email_to_user( $user, $admin, $subject, $text_message, $html_message );
+		/* $this->test_email_to_user( $user, $sender, $subject, $text_message, $html_message ); */
+		email_to_user( $user, $sender, $subject, $text_message, $html_message );
 	}
 
 
@@ -88,9 +94,11 @@ class eMail {
 		return $url;
 	}
 
-	function test_email_to_user( $user, $admin, $subject, $text_message, $html_message ) {
+	function test_email_to_user( $user, $sender, $subject, $text_message, $html_message ) {
+		$sender = is_string($sender) ? $sender : $sender->email;
 		echo "\n--------------------------------------------------------\n";
 		echo "-->to: $user->email \n";
+		echo "-->from: $sender \n";
 		echo ">>>subject $subject\n";
 		echo "===\n $text_message\n";
 		echo "===\n";

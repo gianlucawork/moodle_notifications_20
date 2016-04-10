@@ -13,7 +13,10 @@ For the license please check LICENSE.txt file.
 
 
 Note:
-the SMS functionality depends on your provider. To enable SMS
+The admin actions on the course are considered maintenance and
+are not notified to the students.
+
+The SMS functionality depends on your provider. To enable SMS
 channel please extend lib/AbstractSMS.php class. Call the new
 class SMS. Check lib/SMS.php.sample if you need a starting
 point.
