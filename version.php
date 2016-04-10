@@ -5,4 +5,3 @@ $plugin->release  = 3;
 $plugin->requires  = 2014051200;
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->cron  = 1;
-?>

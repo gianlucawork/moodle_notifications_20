@@ -15,6 +15,8 @@ class notify extends \core\task\scheduled_task {
 
 	public function execute() {       
 		global $CFG;
+                $debug = false;
+                $debug && error_log(__CLASS__.'::'.__FUNCTION__.'::Started');
 		echo "\n\n****** notifications :: begin ******";
 		$User = new User();
 		// clean deleted users data
@@ -29,10 +31,12 @@ class notify extends \core\task\scheduled_task {
 		
 		// if no courses are using this block exit
 		if( !is_array($courses) or count($courses) < 1 ) {
+                    $debug && error_log(__CLASS__.'::'.__FUNCTION__.'::No courses found using the notifications plugin');
 			echo "\n--> None course is using notifications plugin.";
 			echo "\n****** notifications :: end ******\n\n";
 			return;
 		}
+                $debug && error_log(__CLASS__.'::'.__FUNCTION__.'::Found '.count($courses).' courses using the notifications plugin');
 
 		$global_config = get_config('block_notifications');
 
@@ -53,6 +57,7 @@ class notify extends \core\task\scheduled_task {
 			// initialize user preferences and check for new enrolled users in this course
 			$enrolled_users = $User->get_all_users_enrolled_in_the_course($course->id);
 
+                        if($debug) echo "\n--> Found ".count($enrolled_users)." users";
 			foreach($enrolled_users as $user) {
 				// check if the user has preferences
 				$user_preferences = $User->get_preferences($user->id, $course->id);
@@ -63,10 +68,12 @@ class notify extends \core\task\scheduled_task {
 					$user_preferences->course_id = $course->id;
 					$user_preferences->notify_by_email = $course_registration->email_notification_preset;
 					$user_preferences->notify_by_sms = $course_registration->sms_notification_preset;
+                                        
 					$User->initialize_preferences(	$user_preferences->user_id,
-													$user_preferences->course_id,
-													$user_preferences->notify_by_email,
-													$user_preferences->notify_by_sms );
+                                            $user_preferences->course_id,
+                                            $user_preferences->notify_by_email,
+                                            $user_preferences->notify_by_sms );
+                                    if($debug) echo "\n--> User {$user->id} has preferences; notify_by_email={{$user_preferences->notify_by_email}}";
 				}
 			}
 
@@ -74,17 +81,23 @@ class notify extends \core\task\scheduled_task {
 			// or the last notification time is older than two days
 			// then reinitialize course log
 			if( !$Course->log_exists($course->id) or $course_registration->last_notification_time + 48*3600 < time() ) {
-				$Course->initialize_log($course->id);
-			}
+                            if($debug) echo "\n--> The course log does not exist, so initialize it";	
+                            $Course->initialize_log($course->id);
+			} else {
+                            if($debug) echo "\n--> The course log already exists";	
+                        }
 
 			$Course->update_log($course->id);
+                        if($debug) echo "\n--> Done course->update_log()";	
 
 			// check if the course has something new or not
 			$changelist = $Course->get_recent_activities($course->id);
+                        if($debug) echo "\n--> Done course->get_recent_activities()";	
 
 			// update the last notification time
 			$Course->update_last_notification_time($course->id, time());
 
+                        if($debug) echo "\n--> Here is the course changelist=".print_r($changelist, true);
 			if( empty($changelist) ) { continue; } // check the next course. No new items in this one.
 
 
@@ -117,4 +130,3 @@ class notify extends \core\task\scheduled_task {
 		echo "\n****** notifications :: end ******\n\n";
 	}                                                                                                                               
 }
-?>
