@@ -222,6 +222,10 @@ class Course {
 		if(empty($logs)) {
 			return; // no logs have to be updated
 		}
+		
+                //We will use this to make sure the course module exists
+                $course_modules_arr = $modinfo->get_cms();
+		
 		// add new records
 		foreach( $logs as $log) {
 			// ignore admin activities
@@ -262,7 +266,18 @@ class Course {
 						if( empty($modinfo->cms[$log->get_data()['contextinstanceid']]) ) {
 							continue;
 						} else {
-							$module = $modinfo->get_cm($log->get_data()['contextinstanceid']);
+                                                    $coursemoduleid = $log->get_data()['contextinstanceid'];
+                                                    // Check to see if the coursemoduleid exists b/c if it does not exist, 
+                                                    // $modinfo->get_cm() throws a moodle_exception
+                                                    // And procesessing stops:
+                                                    //   Fatal error: Class 'block_notifications\moodle_exception' not found
+                                                    if (!array_key_exists($coursemoduleid, $course_modules_arr)) {
+                                                        $message = "Failed to find coursemoduleid={$coursemoduleid} in the course coursemodule info";
+                                                        //We are namespaced in this module, so we must put a backslash before moodle_exception
+                                                        throw new \moodle_exception('invalidcoursemodule', 'error');
+                                                    }
+
+                                                    $module = $modinfo->get_cm($coursemoduleid);
 						}
 						// check if the module is visible.
 						// avoid logging invisible modules.
