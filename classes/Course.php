@@ -222,10 +222,8 @@ class Course {
 		if(empty($logs)) {
 			return; // no logs have to be updated
 		}
-                
                 //We will use this to make sure the course module exists
                 $course_modules_arr = $modinfo->get_cms();
-                
 		// add new records
 		foreach( $logs as $log) {
 			// ignore admin activities
