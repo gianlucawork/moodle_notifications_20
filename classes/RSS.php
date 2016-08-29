@@ -37,6 +37,8 @@ class RSS {
 			return; // the rss is not active in the course
 		}
 
+		$module_names = \get_module_types_names();
+
 		$now = date('r');
 		$course_name = $this->standardize($course_info->fullname);
 		$course_summary = $this->standardize($course_info->summary);
@@ -66,7 +68,11 @@ class RSS {
 			$separator = ' - ';
 			foreach( $logs as $log ) {
 				$output .= "<item>";
-				$output .= '<title>'.get_string($log->module, 'block_notifications').': ' . $this->standardize($log->name) . '</title>';
+				if(empty($module_names[$log->module])) {
+					$output .= '<title>'.get_string($log->module, 'block_notifications').': ' . $this->standardize($log->name) . '</title>';
+				} else {
+					$output .= '<title>' . $module_names[$log->module] . ': ' . $this->standardize($log->name) . '</title>';
+				}
 				if ( preg_match('/deleted/', $log->event) ) {
 					$output .= "<link></link>";
 				} else {

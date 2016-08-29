@@ -36,7 +36,7 @@ $string['user_preference_header'] = 'Enable or Disable your notification channel
 $string['global_events_explanation'] = 'Global settings for the notifications of the events in the course. The selected events are going to be notified to the users. The notification of these events can still be disabled on the course level.';
 $string['events_explanation'] = 'Enable here the events that are going to be notified.';
 
-// MODULES AND TARGETS
+// MODULES AND TARGETS; FALLBACK NAMES
 $string['assign'] = 'Assignment';
 $string['assignment'] = 'Assignment';
 $string['chat'] = 'Chat';
