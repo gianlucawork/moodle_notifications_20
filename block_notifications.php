@@ -82,7 +82,7 @@ class block_notifications extends block_base {
 
 			// intialize preferences if preferences if necessary
 			if(is_null($user_preferences)) {
-				$user_preferences = new Object();
+				$user_preferences = new stdClass();
 				$user_preferences->user_id = $USER->id;
 				$user_preferences->course_id = $COURSE->id;
 				$user_preferences->notify_by_email = $course_registration->email_notification_preset;

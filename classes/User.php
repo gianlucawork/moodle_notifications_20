@@ -1,7 +1,7 @@
 <?php
 namespace block_notifications;
 
-use Object;
+use stdClass;
 use context_course;
 use report_eventlist_list_generator;
 
@@ -12,7 +12,7 @@ use report_eventlist_list_generator;
 class User {
 	function get_all_users_enrolled_in_the_course( $course_id ) {
 		$context = context_course::instance( $course_id );
-		$all_users = get_users_by_capability( $context, 'mod/assignment:view', 'u.id, u.firstname, u.lastname, u.email, u.suspended, u.mailformat, u.phone2, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename', 'lastname ASC, firstname DESC' );
+		$all_users = get_users_by_capability( $context, 'mod/assignment:view', 'u.id, u.username, u.firstname, u.lastname, u.email, u.suspended, u.mailformat, u.phone2, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename', 'lastname ASC, firstname DESC' );
 		$advanced_users = get_users_by_capability( $context, 'moodle/course:create', 'u.id', 'lastname ASC, firstname DESC' );
 		// filter advanced users: administrators
 		foreach( $advanced_users as $key => $value ) {
@@ -42,7 +42,7 @@ class User {
 	// a new user is enrolled in the course that uses notifications block
 	function initialize_preferences( $user_id, $course_id, $notify_by_email, $notify_by_sms ) {
 		global $DB;
-		$user_preferences = new Object();
+		$user_preferences = new stdClass();
 		$user_preferences->user_id = $user_id;
 		$user_preferences->course_id = $course_id;
 		$user_preferences->notify_by_email = $notify_by_email;
@@ -53,7 +53,7 @@ class User {
 	function update_preferences( $user_id, $course_id, $notify_by_email, $notify_by_sms ) {
 		global $DB;
 		$previous_user_preferences = $this->get_preferences( $user_id, $course_id );
-		$user_preferences = new Object();
+		$user_preferences = new stdClass();
 		$user_preferences->id = $previous_user_preferences->id;
 		$user_preferences->user_id = $user_id;
 		$user_preferences->course_id = $course_id;

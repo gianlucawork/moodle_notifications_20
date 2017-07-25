@@ -94,7 +94,7 @@ class block_notifications_edit_form extends block_edit_form {
 	}
 
 	function set_data( $defaults ) {
-		$block_config = new Object();
+		$block_config = new stdClass();
 		$block_config->notify_by_email = file_get_submitted_draft_itemid( 'notify_by_email' );
 		$block_config->notify_by_sms = file_get_submitted_draft_itemid( 'notify_by_sms' );
 		$block_config->notify_by_rss = file_get_submitted_draft_itemid( 'notify_by_rss' );
