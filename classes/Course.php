@@ -426,10 +426,18 @@ class Course {
 		foreach($nameless_modules as $nameless_module) {
 			$entry = $this->extract_deleted_module_name($course_id, $nameless_module->module, $nameless_module->module_id, $nameless_module->target, $nameless_module->target_id);
 			if(isset($entry->name)) {
-				$entry_name = addslashes($entry->name);
-				$DB->execute( "update {$CFG->prefix}block_notifications_log set name = '$entry_name' where course_id = $course_id
-								and module = '$nameless_module->module' and module_id = $nameless_module->module_id  
-								and target = '$nameless_module->target' and target_id = $nameless_module->target_id and name = ''");
+				$DB->execute( "update {block_notifications_log} set name = :entry_name where course_id = :course_id
+					and module = :module and module_id = :module_id
+					and target = :target and target_id = :target_id and name = ''",
+					array(
+						'entry_name' => $entry->name,
+						'course_id' => $course_id,
+						'module' => $nameless_module->module,
+						'module_id' => $nameless_module->module_id,
+						'target' => $nameless_module->target,
+						'target_id' => $nameless_module->target_id
+					)
+				);
 			}
 		}
 	}
