@@ -67,6 +67,7 @@ class block_notifications extends block_base {
 		global $CFG;
 		global $COURSE;
 		global $USER;
+		global $PAGE;
 
 		$global_config = get_config('block_notifications');
 		// if admin user or both sms and email notifications
@@ -101,8 +102,9 @@ class block_notifications extends block_base {
 			if( isset($user_preferences->notify_by_sms) and $user_preferences->notify_by_sms == 1) { $sms_notification_status = 'checked="checked"'; }
 
 			//user preferences interface
-			$up_interface ="<script src='$CFG->wwwroot/blocks/notifications/js/jquery-1.4.3.js' type='text/javascript'></script>";
-			$up_interface.="<script src='$CFG->wwwroot/blocks/notifications/js/user_preferences_interface.php' type='text/javascript'></script>";
+			$PAGE->requires->jquery();
+			$PAGE->requires->js('/blocks/notifications/js/user_preferences_interface.php');
+			$up_interface ="";
 			$up_interface.='<div id="notifications_config_preferences">'; // main div
 			$up_interface.='<a id="notifications_user_preferences_trigger" href="#" onclick="show_user_preferences_panel()">';
 			$up_interface.= get_string('user_preference_settings', 'block_notifications');

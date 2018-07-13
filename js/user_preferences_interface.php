@@ -1,3 +1,5 @@
+<?php header("Content-Type: text/javascript"); ?>
+
 function show_user_preferences_panel() {
 	$('#notifications_user_preferences_trigger').hide();
 	$('#notifications_user_preferences').show();
