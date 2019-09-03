@@ -1,8 +1,11 @@
 <?php
+
 namespace block_notifications;
 
 use stdClass;
 use context_course;
+use get_course;
+use get_category_or_system_context;
 use report_eventlist_list_generator;
 
 //***************************************************
@@ -11,9 +14,13 @@ use report_eventlist_list_generator;
 
 class User {
 	function get_all_users_enrolled_in_the_course( $course_id ) {
+		global $CFG;
+		require_once("$CFG->dirroot/course/lib.php");
 		$context = context_course::instance( $course_id );
+		$c = get_course($course_id);
+		$category_context = get_category_or_system_context($c->category);
 		$all_users = get_users_by_capability( $context, 'mod/assignment:view', 'u.id, u.username, u.firstname, u.lastname, u.email, u.suspended, u.mailformat, u.phone2, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename', 'lastname ASC, firstname DESC' );
-		$advanced_users = get_users_by_capability( $context, 'moodle/course:create', 'u.id', 'lastname ASC, firstname DESC' );
+		$advanced_users = get_users_by_capability( $category_context, 'moodle/category:manage', 'u.id', 'lastname ASC, firstname DESC' );
 		// filter advanced users: administrators
 		foreach( $advanced_users as $key => $value ) {
 			unset( $all_users[$key] );
