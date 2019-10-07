@@ -397,7 +397,7 @@ class Course {
 						from {$CFG->prefix}block_notifications_log left join {$CFG->prefix}course_modules
 							on ({$CFG->prefix}block_notifications_log.module_id = {$CFG->prefix}course_modules.id) ) logs_with_visibility";
 		// select all modules that are visible and whose status is pending
-		$recent_activities = $DB->get_records_sql( "select * from $subtable where course_id = $course_id and status='pending' and (visible = 1 or visible is null)" );
+		$recent_activities = $DB->get_records_sql( "select * from $subtable where course_id = $course_id and status=0 and (visible = 1 or visible is null)" );
 		// clear all pending notifications
 		if(!empty($recent_activities))
 			$DB->execute( "update {$CFG->prefix}block_notifications_log set status = 1 
