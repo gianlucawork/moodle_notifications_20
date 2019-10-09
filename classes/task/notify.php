@@ -29,7 +29,7 @@ class notify extends \core\task\scheduled_task {
 
 		// get the list of courses that are using this block
 		$courses = $Course->get_all_courses_using_notifications_block();
-		
+
 		// if no courses are using this block exit
 		if( !is_array($courses) or count($courses) < 1 ) {
 			$debug && error_log(__CLASS__.'::'.__FUNCTION__.'::No courses found using the notifications plugin');
@@ -69,12 +69,12 @@ class notify extends \core\task\scheduled_task {
 					$user_preferences->course_id = $course->id;
 					$user_preferences->notify_by_email = $course_registration->email_notification_preset;
 					$user_preferences->notify_by_sms = $course_registration->sms_notification_preset;
-										
+
 					$User->initialize_preferences(	$user_preferences->user_id,
 											$user_preferences->course_id,
 											$user_preferences->notify_by_email,
 											$user_preferences->notify_by_sms );
-									if($debug) echo "\n--> User {$user->id} has preferences; notify_by_email={{$user_preferences->notify_by_email}}";
+                      if($debug) echo "\n--> User {$user->id} has preferences; notify_by_email={{$user_preferences->notify_by_email}}";
 				}
 			}
 
@@ -82,18 +82,18 @@ class notify extends \core\task\scheduled_task {
 			// or the last notification time is older than two days
 			// then reinitialize course log
 			if( !$Course->log_exists($course->id) or $course_registration->last_notification_time + 48*3600 < time() ) {
-				if($debug) echo "\n--> The course log does not exist, so initialize it";	
+				if($debug) echo "\n--> The course log does not exist, so initialize it";
 				$Course->initialize_log($course->id);
 			} else {
-				if($debug) echo "\n--> The course log already exists";	
+				if($debug) echo "\n--> The course log already exists";
 			}
 
 			$Course->update_log($course->id);
-			if($debug) echo "\n--> Done course->update_log()";	
+			if($debug) echo "\n--> Done course->update_log()";
 
 			// check if the course has something new or not
 			$changelist = $Course->get_recent_activities($course->id);
-			if($debug) echo "\n--> Done course->get_recent_activities()";	
+			if($debug) echo "\n--> Done course->get_recent_activities()";
 
 			// update the last notification time
 			$Course->update_last_notification_time($course->id, time());
