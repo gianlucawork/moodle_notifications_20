@@ -188,9 +188,16 @@ class Course {
 		foreach(SupportedEvents::getShortNames() as $block_instance_setting => $platform_event_name) {
 			$eventname = preg_replace('/\\\/', '_', $platform_event_name);
 			$eventname = preg_replace('/^_/', '', $eventname);
-
 			if($global_config->$eventname == 1 and $course_registration->$block_instance_setting == 1) {
-				$events .= "'".addslashes($platform_event_name)."',";
+				/**
+				*	TO CLARIFY:
+				* Adding escaping slashes to the $platform_event_name will result in not finding in DB.
+				* This is due to how the name is built, separating categories with a backslash.
+        * The function addslashes escapes all characters tha WOULD be interpreted by PHP (not DB)
+				* $events .= "'".addslashes($platform_event_name)."',";
+				*
+				*/
+				$events .= "'".$platform_event_name."',";
 			}
 		}
 		// remove the last comma
@@ -209,7 +216,13 @@ class Course {
 	}
 
 	function initialize_log( $course_id ){
-		$this->populate_log($course_id, time(), 1);
+    // 1. Keep in mind that registration should consider the events 2 days before time(), accordin to the scarce documentation.
+    //    UPDATE: removed 48 * 3600 (two days) backward notification starting point.
+    //            Just kept 60 secs to be sure (<- to be removed when safe)
+    // 2. a log is initialized when there's an event to notify. Giving a status to 1 (value means notified)
+    //    will result in never notify it.
+    //    ORIGINAL STATEMENT: $this->populate_log($course_id, time(), 1);
+		$this->populate_log($course_id, time() - 60, 0);
 	}
 
 	function populate_log( $course, $time, $status ){
@@ -263,7 +276,7 @@ class Course {
 							continue;
 						} else {
                              $coursemoduleid = $log->get_data()['contextinstanceid'];
-                             // Check to see if the coursemoduleid exists b/c if it does not exist, 
+                             // Check to see if the coursemoduleid exists b/c if it does not exist,
                              // $modinfo->get_cm() throws a moodle_exception
                              // And procesessing stops:
                              //   Fatal error: Class 'block_notifications\moodle_exception' not found
@@ -400,7 +413,7 @@ class Course {
 		$recent_activities = $DB->get_records_sql( "select * from $subtable where course_id = $course_id and status=0 and (visible = 1 or visible is null)" );
 		// clear all pending notifications
 		if(!empty($recent_activities))
-			$DB->execute( "update {$CFG->prefix}block_notifications_log set status = 1 
+			$DB->execute( "update {$CFG->prefix}block_notifications_log set status = 1
 								where course_id = $course_id and status = 0
 									and id in ( select id from $subtable where course_id = $course_id and (visible = 1 or visible is null) )" );
 		return $recent_activities;
