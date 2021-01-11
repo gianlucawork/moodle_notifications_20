@@ -69,8 +69,7 @@ $string['label'] = 'Label';
 $string['help_title'] = 'Set your mobile number';
 $string['set_mobile_number_instructions'] = 'Go to the course page and click on your name in the top right corner. Then click on Edit Profile and go to the bottom of the page. Put your number inside Mobile Phone field and then click on Update profile to save.';
 
-//UTILITY
+// UTILITY
 $string['rss_empty_title'] = 'RSS empty';
 $string['rss_empty_description'] = 'This RSS is empty. Wait of the platform to scan and output the course content.';
 $string['rss_not_enabled'] = 'RSS on this course is not enabled.';
-?>

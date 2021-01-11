@@ -32,11 +32,11 @@ class backup_notifications_block_structure_step extends backup_block_structure_s
 
     protected function define_structure() {
         $debug = false;
-        
+
         // To know if we are including userinfo
         try {
             $userinfo = $this->get_setting_value('users');
-            $debug && error_log(__CLASS__.'::'.__FUNCTION__.'::User info found='.($userinfo?1:0));
+            $debug && error_log(__CLASS__.'::'.__FUNCTION__.'::User info found='.($userinfo ? 1 : 0));
         } catch (base_plan_exception $e) {
             $debug && error_log(__CLASS__.'::'.__FUNCTION__.'::User info NOT found');
             $userinfo = false;
