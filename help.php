@@ -2,7 +2,7 @@
 include_once realpath( dirname( __FILE__ ).DIRECTORY_SEPARATOR ).DIRECTORY_SEPARATOR."common.php";
 global $PAGE, $COURSE, $OUTPUT;
 
-$url = new moodle_url('/blocks/notifications/help.php', array('course'=>$COURSE->id));
+$url = new moodle_url('/blocks/notifications/help.php', array('course' => $COURSE->id));
 $PAGE->set_url($url);
 
 $context = get_context_instance(CONTEXT_SYSTEM);
@@ -19,4 +19,3 @@ echo $OUTPUT->box_end();
 echo $OUTPUT->close_window_button();
 
 echo $OUTPUT->footer();
-?>

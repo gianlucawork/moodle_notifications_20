@@ -78,7 +78,7 @@ class restore_notifications_block_structure_step extends restore_structure_step 
          *          [id] =>
          *          [notify_by_email] =>
          *          [notify_by_sms] =>
-         * 
+         *
          * Moodle docs for block restore are non-existent ATM.
          */
         $data->notifications[0]['course_id'] = $this->get_courseid();
